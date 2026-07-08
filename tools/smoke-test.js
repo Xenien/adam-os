@@ -56,6 +56,7 @@ function assert(cond, msg) {
   assert((await page.$$('#missing-free .chip')).length === 3, 'free tier shows exactly 3 missing keywords');
   assert(await page.isVisible('#missing-locked .lock-overlay'), 'paywall overlay visible for free users');
   assert(!(await page.isVisible('#rewrites-card')), 'rewrites hidden for free users');
+  assert(await page.isVisible('#aiprompt-locked'), 'AI prompt teaser locked for free users');
 
   // pro flow (simulated unlock)
   await page.evaluate(() => localStorage.setItem('jobfit_license', 'TEST'));
@@ -68,6 +69,9 @@ function assert(cond, msg) {
   assert(await page.isVisible('#rewrites-card'), 'pro sees rewrite patterns');
   assert(await page.isVisible('#bonuses-card'), 'pro sees bonuses');
   assert(await page.isVisible('#print-btn'), 'pro sees print/PDF button');
+  assert(await page.isVisible('#aiprompt-pro'), 'pro sees AI rewrite prompt');
+  const promptText = await page.textContent('#aiprompt-text');
+  assert(promptText.includes('NEVER invent') && promptText.includes('=== MY CURRENT RESUME ==='), 'AI prompt contains guardrails and resume');
 
   // cheat sheet page loads
   const resp = await page.goto('http://localhost:8901/cheatsheet.html');

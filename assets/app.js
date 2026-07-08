@@ -277,6 +277,7 @@
 
   var isPro = false;
   var lastResult = null;
+  var lastInputs = null;
   var FREE_MISSING = 3, FREE_CHECKS = 2;
 
   function el(tag, className, text) {
@@ -384,6 +385,7 @@
 
     renderRewrites(result);
     renderBonuses();
+    renderAiPrompt(result);
 
     document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -485,6 +487,58 @@
       });
       list.appendChild(det);
     });
+  }
+
+  /* ------------------------------------------------------ AI rewrite prompt */
+
+  function buildAiPrompt(result) {
+    if (!lastInputs) return "";
+    var missing = result.missing.map(function (k) { return k.term; }).join(", ") || "(none)";
+    var matched = result.matched.map(function (k) { return k.term; }).join(", ") || "(none)";
+    var failed = result.checks.filter(function (c) { return !c.pass; })
+      .map(function (c) { return "- " + c.label + ": " + c.tip; }).join("\n") || "- (none — formatting checks all passed)";
+    return [
+      "You are an expert resume writer specializing in ATS (applicant tracking system) optimization. Below are my current resume, the job description I am targeting, and an automated ATS analysis report.",
+      "",
+      "YOUR TASK: Rewrite my resume to maximize my interview rate for this specific job.",
+      "",
+      "NON-NEGOTIABLE RULES:",
+      "1. NEVER invent experience, employers, job titles, dates, degrees, certifications, metrics, or skills I have not stated. If a missing keyword below seems like something I might have but my resume doesn't evidence it, ASK me about it instead of assuming.",
+      "2. Before writing anything, interview me: ask up to 8 targeted questions to collect true facts, real numbers (percentages, dollar amounts, team sizes, volumes), and any unstated experience relevant to the missing keywords. Wait for my answers.",
+      "3. Use standard ATS-safe structure: Summary, Experience, Education, Skills (plus Projects/Certifications if relevant). No tables, columns, text boxes, graphics, or unusual headings.",
+      "4. Weave in the missing keywords below ONLY where they are genuinely true of me, using the job posting's exact wording.",
+      "5. Start every experience bullet with a strong action verb; quantify with my real numbers; no first-person pronouns; no clichés (\"responsible for\", \"team player\", \"hard worker\").",
+      "6. Keep the final resume 400–800 words, tailored to this one posting.",
+      "7. After the rewrite, output a change log: what you changed and why, plus which missing keywords you could NOT include because I lack the experience (so I don't misrepresent myself).",
+      "",
+      "=== ATS ANALYSIS REPORT ===",
+      "Match score: " + result.score + "/100",
+      "Missing keywords (posting emphasizes, resume lacks): " + missing,
+      "Matched keywords (keep these): " + matched,
+      "Failed formatting checks:",
+      failed,
+      "",
+      "=== MY CURRENT RESUME ===",
+      lastInputs.resume,
+      "",
+      "=== JOB DESCRIPTION ===",
+      lastInputs.jd,
+      "",
+      "Begin with your clarifying questions now."
+    ].join("\n");
+  }
+
+  function renderAiPrompt(result) {
+    var card = document.getElementById("aiprompt-card");
+    var locked = document.getElementById("aiprompt-locked");
+    var pro = document.getElementById("aiprompt-pro");
+    card.hidden = false;
+    if (isPro) {
+      locked.hidden = true; pro.hidden = false;
+      document.getElementById("aiprompt-text").textContent = buildAiPrompt(result);
+    } else {
+      locked.hidden = false; pro.hidden = true;
+    }
   }
 
   /* ---------------------------------------------------------- file upload */
@@ -753,7 +807,24 @@
       var jd = jdInput.value.trim();
       if (resume.length < 100) { alert("Paste your full resume text first (it looks too short)."); return; }
       if (jd.length < 100) { alert("Paste the full job description (it looks too short)."); return; }
+      lastInputs = { resume: resume, jd: jd };
       render(analyze(resume, jd));
+    });
+
+    document.getElementById("aiprompt-copy").addEventListener("click", function () {
+      var btn = this;
+      navigator.clipboard.writeText(document.getElementById("aiprompt-text").textContent).then(function () {
+        btn.textContent = "Copied ✓ — paste it into your AI";
+        setTimeout(function () { btn.textContent = "Copy my AI prompt"; }, 2500);
+      });
+    });
+    document.getElementById("aiprompt-download").addEventListener("click", function () {
+      var blob = new Blob([document.getElementById("aiprompt-text").textContent], { type: "text/plain" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "jobfit-ai-rewrite-prompt.txt";
+      a.click();
+      URL.revokeObjectURL(a.href);
     });
 
     document.getElementById("export-btn").addEventListener("click", downloadReport);

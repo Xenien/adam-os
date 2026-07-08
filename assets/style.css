@@ -275,6 +275,9 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .bonus-item-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
 .bonus-text { white-space: pre-wrap; font-family: inherit; font-size: 0.86rem; color: var(--ink-2); background: var(--page); padding: 10px 12px; border-radius: 8px; margin: 0 0 4px; }
 #coach-name { padding: 9px 12px; font: inherit; font-size: 0.85rem; background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 10px; width: 220px; }
+#aiprompt-card { margin-top: 16px; }
+.aiprompt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.aiprompt-pre { max-height: 280px; overflow: auto; margin-top: 12px; }
 
 /* pro state: hide upsells when unlocked */
 body.pro .lock-overlay, body.pro .locked-block { display: none; }

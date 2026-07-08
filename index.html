@@ -148,6 +148,25 @@
       <ol id="tailoring-list" class="tailoring-list"></ol>
     </div>
 
+    <div class="card" id="aiprompt-card" hidden>
+      <h3>Your AI Resume Rewrite Prompt <span class="hint">— paste into ChatGPT, Claude, or Gemini</span></h3>
+      <p class="hint">A master-prompt built from this exact scan — your resume, this posting, your missing keywords and failed checks — with strict guardrails so the AI never invents experience you don't have. It interviews you for real facts, then rewrites.</p>
+      <div id="aiprompt-locked" class="locked-block" hidden>
+        <pre class="bonus-text blurred" aria-hidden="true">You are an expert resume writer specializing in ATS optimization. Below is my resume, the job description I am targeting, and my ATS analysis report. Your task is to xxxxxx xxxx xxxxxxx xx xxx xxxxxxx xxxxxxxx, xxxxx xxxxxxxxx xxx xxxxxxx xxxxxxxx...</pre>
+        <div class="lock-overlay">
+          <p>Your personalized AI rewrite prompt is a Pro feature</p>
+          <button class="btn-primary btn-sm unlock-cta" type="button">Unlock Pro — <span class="price-slot">$29</span> one-time</button>
+        </div>
+      </div>
+      <div id="aiprompt-pro" hidden>
+        <div class="aiprompt-actions">
+          <button id="aiprompt-copy" class="btn-primary btn-sm" type="button">Copy my AI prompt</button>
+          <button id="aiprompt-download" class="btn-secondary btn-sm" type="button">Download .txt</button>
+        </div>
+        <pre id="aiprompt-text" class="bonus-text aiprompt-pre"></pre>
+      </div>
+    </div>
+
     <div class="card" id="bonuses-card" hidden>
       <h3>Your Pro bonuses</h3>
       <div id="bonuses-list"></div>
@@ -186,6 +205,7 @@
           <li>✓ <strong>Every</strong> missing keyword, for <strong>every</strong> job you apply to, forever <span class="value-tag">what Jobscan rents for $49.95/mo</span></li>
           <li>✓ All 8 ATS checks with exact fix-it instructions</li>
           <li>✓ <strong>Bullet rewrite patterns</strong> — copy, fill in your numbers, paste</li>
+          <li>✓ <strong>AI Rewrite Prompt</strong> — a personalized prompt that makes ChatGPT/Claude rewrite your resume for this exact job, without making things up</li>
           <li>✓ Print-ready PDF report per application</li>
           <li>✓ <strong>Bonus:</strong> Recruiter outreach scripts (get seen even when filtered)</li>
           <li>✓ <strong>Bonus:</strong> Follow-up email templates that revive dead applications</li>
