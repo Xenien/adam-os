@@ -114,6 +114,7 @@
       <div class="tile hero"><div class="label">Points today</div><div class="value" id="ptsToday">0</div><div class="delta" id="ptsMax">of 135 possible</div></div>
       <div class="tile"><div class="label">MVD status</div><div class="value" id="mvdStatus">0/3</div><div class="delta">the floor — never below this</div></div>
       <div class="tile"><div class="label">Streak (MVD days)</div><div class="value" id="streakVal">0</div><div class="delta" id="streakNote">log days to build it</div></div>
+      <div class="tile"><div class="label">Spanish in One Month</div><div class="value" id="challengeDays">—</div><div class="delta">days left · public challenge, cohort is the witness</div></div>
     </div>
 
     <div class="card">
@@ -258,6 +259,7 @@
       <div class="rule"><b>5 · Novelty gets a slot, not a veto.</b><span>Your openness will keep generating new obsessions. Good — they go in the Wildcard slot (30 min weekdays, long block Saturday). New idea mid-block? Write it on the capture list; it gets its audition Saturday. The plan bends so it doesn't break.</span></div>
       <div class="rule"><b>6 · Decide once, on Sunday.</b><span>Low industriousness dies by a thousand daily decisions. The Sunday review (30 min) sets the week's 3 targets, books the speaking sessions, and picks the wildcard — weekdays just execute the default week.</span></div>
       <div class="rule"><b>7 · Environment beats intention.</b><span>Phone out of the room for the morning sprint. Spanish app on the home screen; feeds off it. Foundations materials open on the desk before bed. Make the right thing the lazy thing.</span></div>
+      <div class="rule"><b>8 · The Witness Rule — the audit's verdict.</b><span>Six years of your own records say one thing: capture survives, closure dies — unless a human is attached. Every system you kept had people in it; every solo system died in about three weeks. So nothing here counts as a commitment until it has a witness and a date. The nightly check-in is the witness of last resort: answering it IS the closure step.</span></div>
     </div>
 
     <div class="card">
@@ -506,7 +508,7 @@ function renderReviews(){
 // ---------- weekly review wizard ----------
 const RV_QS = [
   ['score', 'Step 1/5 — The scoreboard. This week\'s points vs last week vs your PR — how did it go, and why, in one honest sentence?'],
-  ['targets', 'Step 2/5 — Set exactly THREE targets for next week. Not five. Three.'],
+  ['targets', 'Step 2/5 — Set exactly THREE targets for next week. For EACH one: who is the witness, and what is the date? A target without a human and a date attached is a wish.'],
   ['speaking', 'Step 3/5 — Book your two live Spanish sessions NOW (italki / exchange). Paste the days/times here once booked.'],
   ['wildcard', 'Step 4/5 — Pick next week\'s wildcard. What new thing gets the sanctioned novelty slot?'],
   ['foundations', 'Step 5/5 — Foundations check: what month/foundation are you in, and is the daily habit still running? What needs adjusting?'],
@@ -599,6 +601,13 @@ document.querySelectorAll('nav button').forEach(b=>{
 document.getElementById('todayline').textContent =
   new Date().toLocaleDateString('en-MY',{weekday:'long', day:'numeric', month:'long', year:'numeric'}) +
   ' · Built for high-openness, high-extraversion, low-guilt operation';
+// Spanish in One Month challenge countdown (July 2026)
+(function(){
+  const end = new Date('2026-07-31T23:59:59');
+  const left = Math.max(0, Math.ceil((end - new Date())/86400000));
+  const el = document.getElementById('challengeDays');
+  if(el) el.textContent = left;
+})();
 load();
 renderFoundations();
 refresh();
