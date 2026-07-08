@@ -118,6 +118,12 @@
     </div>
 
     <div class="card">
+      <h2>Spanish in One Month — July grid</h2>
+      <p class="hint">One cell per day. Green fills automatically when you log a day with Spanish done; tap a cell to fix past days. Watching this fill IS the instant result.</p>
+      <div id="challengeGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(34px,1fr)); gap:5px; margin-top:10px"></div>
+    </div>
+
+    <div class="card">
       <h2>Minimum Viable Day — the floor (≈25 min total)</h2>
       <p class="hint">These three are the streak. Do them even on your worst day — they're designed to be almost insulting to skip.</p>
       <div id="mvdList"></div>
@@ -547,6 +553,7 @@ function logDay(){
   state.history.sort((a,b)=>a.date<b.date?-1:1);
   const w = weekStats();
   if(w.pts>state.prWeek) state.prWeek = w.pts;
+  renderChallenge();
   const summary = `${entry.date} — ${entry.pts} pts · MVD ${entry.mvd?'✓':'✗'} · ${entry.sessions.join(', ')||'no sessions'} · streak ${streak()}`;
   navigator.clipboard && navigator.clipboard.writeText(summary).catch(()=>{});
   document.getElementById('closeNote').innerHTML = `<span class="flag">Logged.</span> Copied: <code>${summary}</code> — paste it to Claude or your notes. ${entry.mvd?'Streak extended. ':''}Now export your data (Data tab) or paste the summary somewhere safe.`;
@@ -601,6 +608,37 @@ document.querySelectorAll('nav button').forEach(b=>{
 document.getElementById('todayline').textContent =
   new Date().toLocaleDateString('en-MY',{weekday:'long', day:'numeric', month:'long', year:'numeric'}) +
   ' · Built for high-openness, high-extraversion, low-guilt operation';
+// ---------- July challenge grid ----------
+function challengeDone(dstr){
+  if(state.challenge && state.challenge[dstr] !== undefined) return state.challenge[dstr];
+  const e = state.history.find(x=>x.date===dstr);
+  if(!e) return false;
+  return e.mvd || (e.sessions||[]).includes('esp1');
+}
+function renderChallenge(){
+  const g = document.getElementById('challengeGrid');
+  if(!g) return;
+  g.innerHTML = '';
+  const todayD = dateStr();
+  for(let d=1; d<=31; d++){
+    const dstr = '2026-07-' + String(d).padStart(2,'0');
+    const done = challengeDone(dstr);
+    const future = dstr > todayD;
+    const cell = document.createElement('div');
+    cell.style.cssText = 'aspect-ratio:1; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; cursor:pointer; border:1px solid var(--border);' +
+      (done ? 'background:var(--esp); color:#fff;' : future ? 'background:var(--page); color:var(--muted);' : 'background:var(--esp-track); color:var(--ink2);');
+    cell.textContent = d;
+    cell.title = dstr + (done ? ' — done' : future ? '' : ' — tap to mark done');
+    cell.addEventListener('click', ()=>{
+      if(future) return;
+      state.challenge = state.challenge || {};
+      state.challenge[dstr] = !challengeDone(dstr);
+      save(); renderChallenge();
+    });
+    g.appendChild(cell);
+  }
+}
+
 // Spanish in One Month challenge countdown (July 2026)
 (function(){
   const end = new Date('2026-07-31T23:59:59');
@@ -610,6 +648,7 @@ document.getElementById('todayline').textContent =
 })();
 load();
 renderFoundations();
+renderChallenge();
 refresh();
 </script>
 </body>
