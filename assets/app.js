@@ -714,8 +714,15 @@
   }
 
   // Google Ads conversion signals — guarded so ad blockers can't break the app.
+  var ADS_CONVERSIONS = { begin_checkout: "AW-18309597951/ZEn5CPj0mM0cEP-V2ZpE" };
   function track(eventName, params) {
-    try { if (typeof window.gtag === "function") window.gtag("event", eventName, params || {}); } catch (e) { /* never let analytics break the product */ }
+    try {
+      if (typeof window.gtag !== "function") return;
+      window.gtag("event", eventName, params || {});
+      if (ADS_CONVERSIONS[eventName]) {
+        window.gtag("event", "conversion", Object.assign({ send_to: ADS_CONVERSIONS[eventName] }, params || {}));
+      }
+    } catch (e) { /* never let analytics break the product */ }
   }
 
   function openModal() {
