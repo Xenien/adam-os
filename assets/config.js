@@ -22,5 +22,5 @@ window.JOBFIT_CONFIG = {
 
   // Optional: your Gumroad $0 lead-magnet product URL (captures emails).
   // Until set, the cheat sheet link points at the local cheatsheet.html page.
-  leadMagnetUrl: "REPLACE_ME",
+  leadMagnetUrl: "https://hafezian22.gumroad.com/l/pfkhle",
 };
