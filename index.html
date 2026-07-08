@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adam's Engine — Plan &amp; Scoreboard</title>
+<style>
+  :root{
+    --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,.10);
+    --pdi:#2a78d6; --pdi-track:#cde2fb;
+    --esp:#1baf7a; --esp-track:#c9f0e2;
+    --fnd:#eda100; --fnd-track:#fbe8bd;
+    --wld:#008300; --wld-track:#cdeacd;
+    --good:#0ca30c; --warn:#fab219; --goodtext:#006300;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,.10);
+      --pdi:#3987e5; --pdi-track:#1c3554;
+      --esp:#199e70; --esp-track:#123a2c;
+      --fnd:#c98500; --fnd-track:#3d2f0e;
+      --wld:#008300; --wld-track:#123512;
+      --good:#0ca30c; --goodtext:#0ca30c;
+    }
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--page); color:var(--ink); line-height:1.5; padding-bottom:60px}
+  .wrap{max-width:980px; margin:0 auto; padding:20px 16px}
+  header{padding:26px 0 10px}
+  header h1{font-size:26px; letter-spacing:-.02em}
+  header .sub{color:var(--ink2); font-size:14px; margin-top:2px}
+  nav{display:flex; gap:6px; flex-wrap:wrap; margin:18px 0 20px; border-bottom:1px solid var(--grid); padding-bottom:0}
+  nav button{background:none; border:none; font:inherit; font-size:14px; font-weight:600; color:var(--muted); padding:9px 14px; cursor:pointer; border-bottom:2px solid transparent}
+  nav button.active{color:var(--ink); border-bottom-color:var(--pdi)}
+  .tab{display:none}
+  .tab.active{display:block}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:14px}
+  .card h2{font-size:15px; font-weight:700; margin-bottom:10px}
+  .card h3{font-size:13px; font-weight:700; margin:14px 0 6px}
+  .hint{color:var(--muted); font-size:12.5px}
+  .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:14px}
+  .tile{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px}
+  .tile .label{font-size:12.5px; color:var(--ink2)}
+  .tile .value{font-size:30px; font-weight:600; margin-top:2px}
+  .tile .delta{font-size:12.5px; margin-top:2px; color:var(--ink2)}
+  .tile .delta.up{color:var(--goodtext); font-weight:600}
+  .hero .value{font-size:48px}
+  /* checklist */
+  .check{display:flex; align-items:flex-start; gap:12px; padding:11px 4px; border-bottom:1px solid var(--grid); cursor:pointer; user-select:none}
+  .check:last-child{border-bottom:none}
+  .check input{width:20px; height:20px; margin-top:2px; accent-color:var(--pdi); cursor:pointer; flex-shrink:0}
+  .check .t{font-size:14.5px; font-weight:600}
+  .check .d{font-size:12.5px; color:var(--ink2)}
+  .check .pts{margin-left:auto; font-size:12.5px; font-weight:700; color:var(--ink2); white-space:nowrap; padding-top:3px}
+  .check.done .t{text-decoration:line-through; color:var(--muted)}
+  .keydot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:baseline}
+  /* meters & bars */
+  .meter{height:14px; border-radius:4px 4px 0 0; background:var(--pdi-track); position:relative; overflow:hidden; border-radius:7px}
+  .meter>span{display:block; height:100%; background:var(--pdi); border-radius:0 7px 7px 0}
+  .bar-row{display:grid; grid-template-columns:120px 1fr 64px; gap:10px; align-items:center; margin:9px 0; font-size:13px}
+  .bar-row .name{font-weight:600}
+  .bar-row .val{text-align:right; color:var(--ink2); font-variant-numeric:tabular-nums}
+  .track{height:14px; border-radius:7px; overflow:hidden}
+  .track>span{display:block; height:100%; border-radius:0 7px 7px 0}
+  /* schedule */
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{padding:7px 8px; border-bottom:1px solid var(--grid); text-align:left; vertical-align:top}
+  th{color:var(--muted); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em}
+  td .slot{border-left:3px solid var(--baseline); padding-left:7px}
+  .pill{display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:99px; border:1px solid var(--border)}
+  /* foundations grid */
+  .fgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px}
+  .fcell{border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--surface)}
+  .fcell .mo{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em}
+  .fcell .fn{font-size:15px; font-weight:700; margin:2px 0}
+  .fcell .hb{font-size:12.5px; color:var(--ink2)}
+  .fcell.current{border-color:var(--fnd); border-width:2px}
+  .fcell.current .mo::after{content:" · now"; color:var(--fnd); font-weight:700}
+  /* playbook */
+  .rule{padding:10px 0; border-bottom:1px solid var(--grid)}
+  .rule:last-child{border:none}
+  .rule b{display:block; font-size:14px}
+  .rule span{font-size:13px; color:var(--ink2)}
+  textarea{width:100%; min-height:90px; font:12px ui-monospace,monospace; background:var(--page); color:var(--ink); border:1px solid var(--grid); border-radius:8px; padding:8px}
+  .btn{font:inherit; font-size:13px; font-weight:600; padding:8px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer}
+  .btn.primary{background:var(--pdi); border-color:var(--pdi); color:#fff}
+  .btnrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+  .note{font-size:12.5px; color:var(--ink2); background:var(--page); border:1px solid var(--grid); border-radius:8px; padding:10px 12px; margin-top:10px}
+  .flag{font-weight:700}
+  @media(max-width:640px){ .bar-row{grid-template-columns:90px 1fr 56px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Adam's Engine</h1>
+    <div class="sub" id="todayline">—</div>
+  </header>
+
+  <nav>
+    <button class="active" data-tab="today">Today</button>
+    <button data-tab="week">Week</button>
+    <button data-tab="history">History</button>
+    <button data-tab="foundations">Foundations</button>
+    <button data-tab="playbook">Playbook</button>
+    <button data-tab="data">Data</button>
+  </nav>
+
+  <!-- ============ TODAY ============ -->
+  <section class="tab active" id="tab-today">
+    <div class="tiles">
+      <div class="tile hero"><div class="label">Points today</div><div class="value" id="ptsToday">0</div><div class="delta" id="ptsMax">of 135 possible</div></div>
+      <div class="tile"><div class="label">MVD status</div><div class="value" id="mvdStatus">0/3</div><div class="delta">the floor — never below this</div></div>
+      <div class="tile"><div class="label">Streak (MVD days)</div><div class="value" id="streakVal">0</div><div class="delta" id="streakNote">log days to build it</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Minimum Viable Day — the floor (≈25 min total)</h2>
+      <p class="hint">These three are the streak. Do them even on your worst day — they're designed to be almost insulting to skip.</p>
+      <div id="mvdList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Full-day sessions</h2>
+      <p class="hint">Each logged session scores. Social bonus stacks: any session done with, taught to, or reported to another human is worth more — that's your fuel, use it.</p>
+      <div id="sessionList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Close the day</h2>
+      <div class="btnrow">
+        <button class="btn primary" onclick="logDay()">Log today &amp; copy summary</button>
+        <button class="btn" onclick="resetToday()">Reset checkboxes</button>
+      </div>
+      <div class="note" id="closeNote">Hit "Log today" at 21:45. It banks your points into the week, extends the streak if the MVD is done, and copies a one-line summary you can paste to Claude or your notes.</div>
+    </div>
+  </section>
+
+  <!-- ============ WEEK ============ -->
+  <section class="tab" id="tab-week">
+    <div class="tiles">
+      <div class="tile"><div class="label">This week</div><div class="value" id="wkPts">0</div><div class="delta" id="wkDelta">vs last week —</div></div>
+      <div class="tile"><div class="label">Personal record (week)</div><div class="value" id="wkPR">0</div><div class="delta">beat it</div></div>
+      <div class="tile"><div class="label">Days logged this week</div><div class="value" id="wkDays">0</div><div class="delta">target 7</div></div>
+      <div class="tile"><div class="label">Rank this week</div><div class="value" id="wkRank" style="font-size:20px">—</div><div class="delta">Bronze 400 · Silver 550 · Gold 700</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Weekly review</h2>
+      <p class="hint">Sunday, 20:00, 30 minutes. Decide once — the week executes itself.</p>
+      <div class="btnrow"><button class="btn primary" onclick="startReview()">Run the weekly review</button></div>
+      <div id="reviewBox" style="display:none; margin-top:12px">
+        <h3 id="rvQ"></h3>
+        <textarea id="rvA" placeholder="Type your answer…"></textarea>
+        <div class="btnrow">
+          <button class="btn primary" onclick="nextReview()">Next</button>
+          <button class="btn" onclick="cancelReview()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Weekly targets</h2>
+      <div id="wkBars"></div>
+      <p class="hint" style="margin-top:8px">Bars fill from logged days. Targets: 10 PDI deep-work blocks, 6 Spanish sessions (incl. 2 live speaking), 5 Foundations blocks, 3 wildcard sessions.</p>
+    </div>
+
+    <div class="card">
+      <h2>The default week</h2>
+      <p class="hint">Anchored around your work hours. Same skeleton every week — decisions were made once, on Sunday, so weekdays require zero planning willpower.</p>
+      <div style="overflow-x:auto; margin-top:10px">
+      <table>
+        <tr><th style="width:110px">Slot</th><th>Mon–Fri</th><th>Saturday</th><th>Sunday</th></tr>
+        <tr><td><b>06:50–07:20</b></td>
+            <td><div class="slot" style="border-color:var(--esp)"><b>Spanish sprint</b> — speak out loud: Anki + shadowing. Phone stays in the other room until this is done.</div></td>
+            <td><div class="slot" style="border-color:var(--esp)"><b>Spanish sprint</b></div></td>
+            <td><div class="slot" style="border-color:var(--esp)"><b>Spanish sprint</b></div></td></tr>
+        <tr><td><b>Work AM</b></td>
+            <td><div class="slot" style="border-color:var(--pdi)"><b>PDI Deep Block 1</b> — 90 min, hardest task first, notifications off.</div></td>
+            <td rowspan="2"><div class="slot" style="border-color:var(--fnd)"><b>Foundations project block</b> — 2h on the month's foundation (the bigger weekly action).</div></td>
+            <td rowspan="2"><div class="slot" style="border-color:var(--wld)"><b>Wildcard long block</b> — whatever you've decided to add. Sanctioned novelty.</div></td></tr>
+        <tr><td><b>Lunch</b></td>
+            <td><div class="slot" style="border-color:var(--esp)"><b>Passive immersion</b> — Spanish podcast / YouTube with food. Bonus, not obligation.</div></td></tr>
+        <tr><td><b>Work PM</b></td>
+            <td><div class="slot" style="border-color:var(--pdi)"><b>PDI Deep Block 2</b> — 90 min. Close the loop on Block 1's output.</div></td>
+            <td><div class="slot" style="border-color:var(--esp)"><b>Live speaking #1</b> — italki / language exchange, 45–60 min. Booked in advance = can't skip.</div></td>
+            <td><div class="slot" style="border-color:var(--esp)"><b>Live speaking #2</b> — second session or language-exchange meetup.</div></td></tr>
+        <tr><td><b>20:00–21:15</b></td>
+            <td><div class="slot" style="border-color:var(--fnd)"><b>Foundations block</b> — 75 min: lesson + habit action for the month.</div></td>
+            <td><div class="slot" style="border-color:var(--wld)"><b>Social / free</b> — go out. Recovery is part of the system.</div></td>
+            <td><div class="slot" style="border-color:var(--pdi)"><b>WEEKLY REVIEW</b> — 30 min: score the week, set next week's 3 targets, book the italki sessions, pick the wildcard.</div></td></tr>
+        <tr><td><b>21:15–21:45</b></td>
+            <td><div class="slot" style="border-color:var(--wld)"><b>Wildcard / teach</b> — 30 min on anything new, or tell someone what you learned today.</div></td>
+            <td><div class="slot" style="border-color:var(--baseline)">Free</div></td>
+            <td><div class="slot" style="border-color:var(--baseline)">Prep Monday — 5 min</div></td></tr>
+        <tr><td><b>21:45</b></td>
+            <td colspan="3"><div class="slot" style="border-color:var(--pdi)"><b>Score the day</b> — 2 min on this dashboard. This is an MVD item; the day isn't over until it's scored.</div></td></tr>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HISTORY ============ -->
+  <section class="tab" id="tab-history">
+    <div class="card">
+      <h2>Daily points — last 30 days</h2>
+      <p class="hint">Each bar is a logged day. Blue = MVD done; gray = MVD missed that day.</p>
+      <div id="histChart" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <h2>Weekly totals</h2>
+      <div id="histWeeks"></div>
+    </div>
+    <div class="card">
+      <h2>Review log</h2>
+      <div id="reviewLog" class="hint">No weekly reviews saved yet.</div>
+    </div>
+  </section>
+
+  <!-- ============ FOUNDATIONS ============ -->
+  <section class="tab" id="tab-foundations">
+    <div class="card">
+      <h2>Foundations — one foundation per month, 12 months</h2>
+      <p class="hint">Scott Young's sequence. Each month has one keystone habit; the weekly project block goes deeper. You started July 2026.</p>
+      <div class="fgrid" id="fGrid" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <h2>How to run a Foundations month (your version)</h2>
+      <div class="rule"><b>Weekdays: 75-minute evening block.</b><span>Do the lesson/reading, then immediately perform the month's habit action. Knowledge without the rep doesn't count.</span></div>
+      <div class="rule"><b>Saturday: 2-hour project block.</b><span>The month's bigger build — set up the capture system, do the budget, the meal rules, whatever the foundation demands.</span></div>
+      <div class="rule"><b>Tell someone.</b><span>Each week, explain what you changed to a friend — or post it. You're exceptionally extraverted; externalizing is how it sticks for you.</span></div>
+      <div class="rule"><b>The habit continues after the month ends.</b><span>Month N+1 stacks on month N. By next June you're running twelve keystone habits, each installed one at a time.</span></div>
+    </div>
+  </section>
+
+  <!-- ============ PLAYBOOK ============ -->
+  <section class="tab" id="tab-playbook">
+    <div class="card">
+      <h2>Who this is built for</h2>
+      <p style="font-size:13.5px; color:var(--ink2)">
+        Big Five (age 19): <b style="color:var(--ink)">Extraversion — exceptionally high</b> (enthusiasm + assertiveness both exceptional) ·
+        <b style="color:var(--ink)">Openness — exceptionally high</b> (intellect + openness both exceptional) ·
+        <b style="color:var(--ink)">Neuroticism — very low</b> (volatility exceptionally low) ·
+        <b style="color:var(--ink)">Conscientiousness — average</b>, with industriousness moderately low ·
+        <b style="color:var(--ink)">Agreeableness — moderately low</b>, politeness low.
+      </p>
+      <div class="note">Translation: you start fast, love people and novelty, don't feel guilt or deadline fear, and won't grind on willpower. So this system never asks for willpower, never uses guilt, and feeds you novelty and competition on purpose.</div>
+    </div>
+
+    <div class="card">
+      <h2>The seven rules</h2>
+      <div class="rule"><b>1 · The floor is sacred; the ceiling is optional.</b><span>The Minimum Viable Day (~25 min) is the only real commitment. Big days are bonus points, not obligations. A system you can satisfy on your worst day is a system you can't fail.</span></div>
+      <div class="rule"><b>2 · Never miss twice.</b><span>Missing one day is noise — with your volatility, it won't even sting, and it shouldn't. Missing two in a row is a trend. Day-after-a-miss is an automatic MVD-only day with a +15 comeback bonus. Coming back IS the win.</span></div>
+      <div class="rule"><b>3 · People are the engine.</b><span>Book live Spanish speaking in advance (paid + scheduled = happens). Teach what you learn. Report your week to someone. Solo silent grinding is your failure mode — social structure is your fuel.</span></div>
+      <div class="rule"><b>4 · Compete with last week, not with an ideal.</b><span>You're assertive and competitive — aim it at the scoreboard. One number per week; beat your PR. Ranks: Bronze 400 · Silver 550 · Gold 700.</span></div>
+      <div class="rule"><b>5 · Novelty gets a slot, not a veto.</b><span>Your openness will keep generating new obsessions. Good — they go in the Wildcard slot (30 min weekdays, long block Saturday). New idea mid-block? Write it on the capture list; it gets its audition Saturday. The plan bends so it doesn't break.</span></div>
+      <div class="rule"><b>6 · Decide once, on Sunday.</b><span>Low industriousness dies by a thousand daily decisions. The Sunday review (30 min) sets the week's 3 targets, books the speaking sessions, and picks the wildcard — weekdays just execute the default week.</span></div>
+      <div class="rule"><b>7 · Environment beats intention.</b><span>Phone out of the room for the morning sprint. Spanish app on the home screen; feeds off it. Foundations materials open on the desk before bed. Make the right thing the lazy thing.</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Scoring</h2>
+      <table>
+        <tr><th>Action</th><th style="text-align:right">Points</th></tr>
+        <tr><td>Each MVD item (3 total)</td><td style="text-align:right">10</td></tr>
+        <tr><td>PDI deep-work block (90 min, max 2/day)</td><td style="text-align:right">20</td></tr>
+        <tr><td>Spanish full session (30+ min)</td><td style="text-align:right">15</td></tr>
+        <tr><td>Foundations evening block</td><td style="text-align:right">20</td></tr>
+        <tr><td>Wildcard session</td><td style="text-align:right">10</td></tr>
+        <tr><td>Social bonus — any session with / taught to / reported to a human</td><td style="text-align:right">+10</td></tr>
+        <tr><td>Comeback bonus — first day back after a miss</td><td style="text-align:right">+15</td></tr>
+      </table>
+      <p class="hint" style="margin-top:8px">Max ordinary day = 135. A perfect week ≈ 800+ — Gold at 700 means roughly six strong days. It's reachable and it's not free. That's the point.</p>
+    </div>
+
+    <div class="card">
+      <h2>Spanish method (extraversion-optimized)</h2>
+      <div class="rule"><b>Speaking-first.</b><span>Two booked live sessions per week (italki / Tandem / local exchange) are the spine — you learn languages the way you do everything: out loud, with people. Apps are the supplement, not the method.</span></div>
+      <div class="rule"><b>Daily sprint (morning, 30 min).</b><span>Anki deck (10 min) + shadowing audio out loud (20 min). Speaking to yourself counts — silent review doesn't.</span></div>
+      <div class="rule"><b>Passive immersion at lunch.</b><span>Podcast or YouTube in Spanish. Zero-willpower bonus input.</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Failure modes &amp; the counter already built in</h2>
+      <table>
+        <tr><th>How you'd fail</th><th>What's in place</th></tr>
+        <tr><td>Week-3 enthusiasm cliff (openness moves on)</td><td>Wildcard slot + 4-week format rotation; the novelty need is fed inside the plan</td></tr>
+        <tr><td>No fear of deadlines (very low neuroticism)</td><td>Zero guilt mechanics; competition + streaks + social visibility instead</td></tr>
+        <tr><td>Willpower-dependent grinding (low industriousness)</td><td>25-min floor, decide-once Sundays, pre-booked sessions, environment design</td></tr>
+        <tr><td>Skipping solo sessions</td><td>Every session can earn the +10 social bonus; live sessions are paid &amp; booked in advance</td></tr>
+        <tr><td>One bad day becomes a bad month</td><td>Never-miss-twice rule + comeback bonus makes the return the win, not the miss the sin</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ DATA ============ -->
+  <section class="tab" id="tab-data">
+    <div class="card">
+      <h2>Your data</h2>
+      <p class="hint">Everything saves automatically in this browser — close the tab, come back tomorrow, it's all here. Data lives on this device only: use Export/Import to back it up or move it to another device (e.g. phone → laptop). Clearing browser data wipes it, so export occasionally.</p>
+      <h3>Export</h3>
+      <div class="btnrow">
+        <button class="btn primary" onclick="exportData()">Copy JSON to clipboard</button>
+        <button class="btn" onclick="downloadData()">Download .json file</button>
+      </div>
+      <h3>Import</h3>
+      <textarea id="importBox" placeholder='Paste previously exported JSON here'></textarea>
+      <div class="btnrow"><button class="btn" onclick="importData()">Import</button></div>
+      <div class="note" id="dataNote">No history loaded yet.</div>
+    </div>
+  </section>
+</div>
+
+<script>
+// ---------- config ----------
+const MVD = [
+  {id:'mvd_esp', t:'Spanish — 10 minutes', d:'One Anki session or one podcast chunk. Out loud if humanly possible.', pts:10},
+  {id:'mvd_fnd', t:'Foundations — 15 minutes', d:"One lesson unit or the month's habit action.", pts:10},
+  {id:'mvd_log', t:'Score the day', d:'Check boxes, hit Log. 2 minutes. The day is not over until this is done.', pts:10},
+];
+const SESSIONS = [
+  {id:'pdi1', t:'PDI Deep Block 1', d:'90 min, hardest task first', pts:20, key:'pdi'},
+  {id:'pdi2', t:'PDI Deep Block 2', d:'90 min', pts:20, key:'pdi'},
+  {id:'esp1', t:'Spanish full session', d:'30+ min sprint, or a live speaking session', pts:15, key:'esp'},
+  {id:'fnd1', t:'Foundations block', d:'75 min lesson + habit rep', pts:20, key:'fnd'},
+  {id:'wld1', t:'Wildcard session', d:'Your current new thing — sanctioned novelty', pts:10, key:'wld'},
+  {id:'soc1', t:'Social bonus', d:'Any session done with / taught to / reported to a human', pts:10, key:'soc'},
+];
+const FOUNDATIONS = [
+  ['Jul 2026','Physical Fitness','Exercise 30 minutes every day'],
+  ['Aug 2026','Productivity','Full-capture system — nothing lives in your head'],
+  ['Sep 2026','Money','Track every ringgit you spend'],
+  ['Oct 2026','Food','Cut junk food; write your exception rules'],
+  ['Nov 2026','Reading','Read books nightly'],
+  ['Dec 2026','Outreach','Meet someone new every week'],
+  ['Jan 2027','Sleep','Consistent sleep + wake times'],
+  ['Feb 2027','Reflection','Write 10 minutes daily'],
+  ['Mar 2027','Connection','A real conversation with a close friend daily'],
+  ['Apr 2027','Focus','Daily deep work on what matters most'],
+  ['May 2027','Organization','Everything gets a home'],
+  ['Jun 2027','Service','Volunteer weekly'],
+];
+const WK_TARGETS = [
+  {key:'pdi', name:'PDI blocks', target:10, color:'var(--pdi)', track:'var(--pdi-track)'},
+  {key:'esp', name:'Spanish', target:6, color:'var(--esp)', track:'var(--esp-track)'},
+  {key:'fnd', name:'Foundations', target:5, color:'var(--fnd)', track:'var(--fnd-track)'},
+  {key:'wld', name:'Wildcard', target:3, color:'var(--wld)', track:'var(--wld-track)'},
+];
+
+// ---------- state (auto-persisted to this browser) ----------
+let state = { history:[], prWeek:0, lastWeekPts:0, reviews:{} };
+let today = {};
+const STORE = 'adamos-v1';
+function save(){
+  try{ localStorage.setItem(STORE, JSON.stringify({state, today, todayDate: dateStr()})); }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE);
+    if(!raw) return;
+    const j = JSON.parse(raw);
+    state = Object.assign({history:[],prWeek:0,lastWeekPts:0,reviews:{}}, j.state||{});
+    // restore today's checkboxes only if it's still the same calendar day
+    today = (j.todayDate === dateStr()) ? (j.today||{}) : {};
+  }catch(e){}
+}
+
+// ---------- render checklists ----------
+function renderChecks(){
+  const mk = (item, container) => {
+    const div = document.createElement('label');
+    div.className = 'check' + (today[item.id] ? ' done':'');
+    const dot = item.key ? `<span class="keydot" style="background:var(--${item.key==='soc'?'pdi':item.key})"></span>` : '';
+    div.innerHTML = `<input type="checkbox" ${today[item.id]?'checked':''}>
+      <div><div class="t">${dot}${item.t}</div><div class="d">${item.d}</div></div>
+      <div class="pts">+${item.pts}</div>`;
+    div.querySelector('input').addEventListener('change', e=>{ today[item.id]=e.target.checked; refresh(); });
+    container.appendChild(div);
+  };
+  const m = document.getElementById('mvdList'); m.innerHTML='';
+  MVD.forEach(i=>mk(i,m));
+  const s = document.getElementById('sessionList'); s.innerHTML='';
+  SESSIONS.forEach(i=>mk(i,s));
+}
+
+function ptsToday(){
+  let p = 0;
+  MVD.forEach(i=>{ if(today[i.id]) p+=i.pts; });
+  SESSIONS.forEach(i=>{ if(today[i.id]) p+=i.pts; });
+  // comeback bonus: last logged day missed MVD & the day before that was logged with MVD? simple: if last entry exists and its mvd=false
+  const h = state.history;
+  if(h.length && !h[h.length-1].mvd && mvdDone()) p += 15;
+  return p;
+}
+function mvdDone(){ return MVD.every(i=>today[i.id]); }
+function mvdCount(){ return MVD.filter(i=>today[i.id]).length; }
+function streak(){
+  let s=0;
+  for(let i=state.history.length-1;i>=0;i--){ if(state.history[i].mvd) s++; else break; }
+  return s;
+}
+function isoWeek(dstr){
+  const d = new Date(dstr+'T12:00:00');
+  const t = new Date(d); t.setDate(t.getDate()+3-((t.getDay()+6)%7));
+  const w1 = new Date(t.getFullYear(),0,4);
+  return t.getFullYear()+'-W'+String(1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7)).padStart(2,'0');
+}
+function weekStats(){
+  const now = dateStr();
+  const wk = isoWeek(now);
+  const entries = state.history.filter(e=>isoWeek(e.date)===wk);
+  const pts = entries.reduce((a,e)=>a+e.pts,0);
+  // exclude today's already-logged entry so live checkboxes don't double count
+  const exclToday = entries.filter(e=>e.date!==now);
+  const ptsExclToday = exclToday.reduce((a,e)=>a+e.pts,0);
+  const counts = {pdi:0,esp:0,fnd:0,wld:0};
+  exclToday.forEach(e=>{ (e.sessions||[]).forEach(id=>{ const s=SESSIONS.find(x=>x.id===id); if(s&&counts[s.key]!==undefined) counts[s.key]++; }); });
+  // last week
+  const weeks = [...new Set(state.history.map(e=>isoWeek(e.date)))].sort();
+  const prevWk = weeks.filter(w=>w<wk).pop();
+  const prevPts = prevWk ? state.history.filter(e=>isoWeek(e.date)===prevWk).reduce((a,e)=>a+e.pts,0) : 0;
+  return {pts, ptsExclToday, days:entries.length, counts, prevPts};
+}
+function rank(p){ return p>=700?'Gold':p>=550?'Silver':p>=400?'Bronze':'—'; }
+function dateStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function refresh(){
+  renderChecks();
+  document.getElementById('ptsToday').textContent = ptsToday();
+  document.getElementById('mvdStatus').textContent = mvdCount()+'/3';
+  const loggedToday = state.history.some(e=>e.date===dateStr());
+  document.getElementById('streakVal').textContent = loggedToday ? streak() : streak() + (mvdDone()?'+1':'');
+  document.getElementById('streakNote').textContent = loggedToday ? 'today is banked' : (mvdDone() ? 'today counts once logged' : 'finish the MVD to extend it');
+  // week
+  const w = weekStats();
+  const livePts = w.ptsExclToday + ptsToday();
+  document.getElementById('wkPts').textContent = livePts;
+  const dEl = document.getElementById('wkDelta');
+  if(w.prevPts>0){
+    const diff = livePts - w.prevPts;
+    dEl.textContent = (diff>=0?'+':'')+diff+' vs last week ('+w.prevPts+')';
+    dEl.className = 'delta' + (diff>0?' up':'');
+  } else dEl.textContent = 'vs last week — no data yet';
+  document.getElementById('wkPR').textContent = Math.max(state.prWeek, livePts);
+  document.getElementById('wkDays').textContent = w.days;
+  document.getElementById('wkRank').textContent = rank(livePts);
+  // bars
+  const bars = document.getElementById('wkBars'); bars.innerHTML='';
+  WK_TARGETS.forEach(t=>{
+    const liveAdd = SESSIONS.filter(s=>s.key===t.key && today[s.id]).length;
+    const v = w.counts[t.key] + liveAdd;
+    const pct = Math.min(100, Math.round(v/t.target*100));
+    const row = document.createElement('div'); row.className='bar-row';
+    row.innerHTML = `<div class="name"><span class="keydot" style="background:${t.color}"></span>${t.name}</div>
+      <div class="track" style="background:${t.track}"><span style="width:${pct}%; background:${t.color}"></span></div>
+      <div class="val">${v} / ${t.target}</div>`;
+    bars.appendChild(row);
+  });
+  renderHistory();
+  save();
+}
+
+// ---------- history chart (SVG) ----------
+function renderHistory(){
+  const el = document.getElementById('histChart');
+  if(!el) return;
+  const days = state.history.slice(-30);
+  if(!days.length){ el.innerHTML = '<p class="hint">Nothing logged yet — your first bar appears tonight.</p>'; document.getElementById('histWeeks').innerHTML=''; renderReviews(); return; }
+  const W = 900, H = 190, PB = 26, PT = 14, max = Math.max(135, ...days.map(d=>d.pts));
+  const bw = Math.min(24, Math.floor(W/days.length) - 4);
+  const step = W/days.length;
+  const y = v => PT + (H-PB-PT) * (1 - v/max);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; height:auto" role="img" aria-label="Daily points, last 30 days">`;
+  // hairline gridlines at 0, 50, 100
+  [0,50,100].forEach(v=>{ svg += `<line x1="0" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)" stroke-width="1"/><text x="0" y="${y(v)-4}" font-size="10" fill="var(--muted)">${v}</text>`; });
+  days.forEach((d,i)=>{
+    const x = i*step + (step-bw)/2, h = (H-PB-PT) * (d.pts/max);
+    const col = d.mvd ? 'var(--pdi)' : 'var(--baseline)';
+    svg += `<path d="M${x},${H-PB} v-${Math.max(h-4,0)} q0,-4 4,-4 h${bw-8} q4,0 4,4 v${Math.max(h-4,0)} z" fill="${col}"><title>${d.date}: ${d.pts} pts${d.mvd?' · MVD ✓':''}</title></path>`;
+    if(i===days.length-1 || d.pts===max) svg += `<text x="${x+bw/2}" y="${y(d.pts)-5}" font-size="10" text-anchor="middle" fill="var(--ink2)">${d.pts}</text>`;
+    if(i%5===0) svg += `<text x="${x+bw/2}" y="${H-8}" font-size="9" text-anchor="middle" fill="var(--muted)">${d.date.slice(5)}</text>`;
+  });
+  svg += `<line x1="0" x2="${W}" y1="${H-PB}" y2="${H-PB}" stroke="var(--baseline)" stroke-width="1"/></svg>`;
+  el.innerHTML = svg;
+  // weekly totals table
+  const byWk = {};
+  state.history.forEach(e=>{ const w=isoWeek(e.date); byWk[w]=(byWk[w]||0)+e.pts; });
+  const weeks = Object.keys(byWk).sort().slice(-8);
+  document.getElementById('histWeeks').innerHTML = '<table><tr><th>Week</th><th style="text-align:right">Points</th><th>Rank</th></tr>' +
+    weeks.map(w=>`<tr><td>${w}</td><td style="text-align:right; font-variant-numeric:tabular-nums">${byWk[w]}</td><td>${rank(byWk[w])}</td></tr>`).join('') + '</table>';
+  renderReviews();
+}
+function renderReviews(){
+  const el = document.getElementById('reviewLog');
+  if(!el) return;
+  const keys = Object.keys(state.reviews||{}).sort().reverse();
+  if(!keys.length){ el.textContent = 'No weekly reviews saved yet.'; return; }
+  el.innerHTML = keys.slice(0,6).map(k=>{
+    const r = state.reviews[k];
+    return `<div class="rule"><b>${k}</b><span>Targets: ${r.targets||'—'} · Wildcard: ${r.wildcard||'—'} · Speaking booked: ${r.speaking||'—'}</span></div>`;
+  }).join('');
+}
+
+// ---------- weekly review wizard ----------
+const RV_QS = [
+  ['score', 'Step 1/5 — The scoreboard. This week\'s points vs last week vs your PR — how did it go, and why, in one honest sentence?'],
+  ['targets', 'Step 2/5 — Set exactly THREE targets for next week. Not five. Three.'],
+  ['speaking', 'Step 3/5 — Book your two live Spanish sessions NOW (italki / exchange). Paste the days/times here once booked.'],
+  ['wildcard', 'Step 4/5 — Pick next week\'s wildcard. What new thing gets the sanctioned novelty slot?'],
+  ['foundations', 'Step 5/5 — Foundations check: what month/foundation are you in, and is the daily habit still running? What needs adjusting?'],
+];
+let rvStep = -1, rvAnswers = {};
+function startReview(){ rvStep = 0; rvAnswers = {}; document.getElementById('reviewBox').style.display='block'; showReview(); }
+function showReview(){ document.getElementById('rvQ').textContent = RV_QS[rvStep][1]; document.getElementById('rvA').value = ''; }
+function nextReview(){
+  rvAnswers[RV_QS[rvStep][0]] = document.getElementById('rvA').value.trim();
+  rvStep++;
+  if(rvStep >= RV_QS.length){
+    state.reviews[isoWeek(dateStr())] = rvAnswers;
+    document.getElementById('reviewBox').style.display='none';
+    save(); renderReviews();
+    document.getElementById('rvQ').textContent = 'Review saved. Next week is decided — now it just executes.';
+    setTimeout(()=>{ document.getElementById('reviewBox').style.display='none'; }, 2500);
+    document.getElementById('reviewBox').querySelector('.btnrow').style.display='none';
+    document.getElementById('rvA').style.display='none';
+    setTimeout(()=>{ document.getElementById('reviewBox').querySelector('.btnrow').style.display='flex'; document.getElementById('rvA').style.display='block'; }, 2600);
+    return;
+  }
+  showReview();
+}
+function cancelReview(){ document.getElementById('reviewBox').style.display='none'; rvStep=-1; }
+
+function logDay(){
+  const entry = {
+    date: dateStr(),
+    pts: ptsToday(),
+    mvd: mvdDone(),
+    sessions: SESSIONS.filter(s=>today[s.id]).map(s=>s.id),
+  };
+  // replace same-date entry if re-logged
+  state.history = state.history.filter(e=>e.date!==entry.date);
+  state.history.push(entry);
+  state.history.sort((a,b)=>a.date<b.date?-1:1);
+  const w = weekStats();
+  if(w.pts>state.prWeek) state.prWeek = w.pts;
+  const summary = `${entry.date} — ${entry.pts} pts · MVD ${entry.mvd?'✓':'✗'} · ${entry.sessions.join(', ')||'no sessions'} · streak ${streak()}`;
+  navigator.clipboard && navigator.clipboard.writeText(summary).catch(()=>{});
+  document.getElementById('closeNote').innerHTML = `<span class="flag">Logged.</span> Copied: <code>${summary}</code> — paste it to Claude or your notes. ${entry.mvd?'Streak extended. ':''}Now export your data (Data tab) or paste the summary somewhere safe.`;
+  refresh();
+}
+function resetToday(){ today={}; refresh(); }
+
+// ---------- foundations grid ----------
+function renderFoundations(){
+  const g = document.getElementById('fGrid');
+  const now = new Date();
+  const curKey = now.toLocaleString('en',{month:'short'})+' '+now.getFullYear();
+  FOUNDATIONS.forEach(f=>{
+    const cell = document.createElement('div');
+    cell.className = 'fcell' + (f[0]===curKey?' current':'');
+    cell.innerHTML = `<div class="mo">${f[0]}</div><div class="fn">${f[1]}</div><div class="hb">${f[2]}</div>`;
+    g.appendChild(cell);
+  });
+}
+
+// ---------- data ----------
+function exportData(){
+  const j = JSON.stringify(state);
+  navigator.clipboard && navigator.clipboard.writeText(j).then(()=>{
+    document.getElementById('dataNote').textContent = 'Copied '+state.history.length+' day(s) of history to clipboard.';
+  }).catch(()=>{ document.getElementById('importBox').value=j; document.getElementById('dataNote').textContent='Clipboard blocked — JSON placed in the box below; copy it manually.'; });
+}
+function downloadData(){
+  const blob = new Blob([JSON.stringify(state,null,1)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'adams-engine-data.json'; a.click();
+}
+function importData(){
+  try{
+    const j = JSON.parse(document.getElementById('importBox').value);
+    if(!Array.isArray(j.history)) throw new Error('bad shape');
+    state = Object.assign({history:[],prWeek:0,lastWeekPts:0}, j);
+    document.getElementById('dataNote').textContent = 'Imported '+state.history.length+' day(s). Streak: '+streak()+'.';
+    refresh();
+  }catch(e){ document.getElementById('dataNote').textContent = 'Import failed — not valid exported JSON.'; }
+}
+
+// ---------- tabs & init ----------
+document.querySelectorAll('nav button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+  });
+});
+document.getElementById('todayline').textContent =
+  new Date().toLocaleDateString('en-MY',{weekday:'long', day:'numeric', month:'long', year:'numeric'}) +
+  ' · Built for high-openness, high-extraversion, low-guilt operation';
+load();
+renderFoundations();
+refresh();
+</script>
+</body>
+</html>
