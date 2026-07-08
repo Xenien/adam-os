@@ -22,12 +22,13 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Backlog (priority order)
 
-- [ ] **SEO field pages.** Create `checkers/` pages for 6 fields (nurses, software
+- [x] **SEO field pages.** Create `checkers/` pages for 6 fields (nurses, software
   engineers, teachers, accountants, marketers, sales reps): each a short page
   titled "ATS Resume Checker for [Field] (2026)" with field-specific keyword
   guidance (reuse the dictionary in `assets/app.js`), an embedded link to the
   main scanner, and proper meta/OG tags. Add a sitemap.xml and link them in the
   site footer. This is the compounding free-traffic channel.
+  *Done 2026-07-08: 6 pages in `checkers/`, sitemap.xml, footer "Field guides" links.*
 - [ ] **.docx upload.** Add Word-file support to the resume upload using mammoth.js
   from a CDN (lazy-loaded like pdf.js). Most resumes are .docx — this is the
   single biggest effort-reducer left.
@@ -54,3 +55,4 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 ## Log
 
 - 2026-07-08 — Loop created. Backlog seeded by the initial build session.
+- 2026-07-08 — SEO field pages shipped: checkers/{nurses,software-engineers,teachers,accountants,marketers,sales-reps}.html (field intro, keyword list from the app dictionary, 3 tips, CTA to the scanner, meta/OG tags), sitemap.xml at root, "Field guides" links in the index footer. Smoke test passed.
