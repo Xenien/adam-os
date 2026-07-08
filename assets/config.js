@@ -12,11 +12,11 @@
  */
 window.JOBFIT_CONFIG = {
   // Where the "Unlock Pro" button sends buyers:
-  gumroadProductUrl: "https://gumroad.com/l/REPLACE_ME",
+  gumroadProductUrl: "https://hafezian22.gumroad.com/l/rarpyh",
 
   // Used to verify license keys. Set ONE of these two (leave the other ""):
-  gumroadProductId: "",          // e.g. "AbCdEfGhIjKlMnOp=="
-  gumroadProductPermalink: "REPLACE_ME", // e.g. "jobfit" (the slug after /l/)
+  gumroadProductId: "DFaI5f05y26lcHdVh30PcA==",
+  gumroadProductPermalink: "",
 
   priceLabel: "$29",
 

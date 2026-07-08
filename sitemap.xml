@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Paths are relative to the site root; prepend the production domain when it is known. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>/index.html</loc></url>
-  <url><loc>/cheatsheet.html</loc></url>
-  <url><loc>/checkers/nurses.html</loc></url>
-  <url><loc>/checkers/software-engineers.html</loc></url>
-  <url><loc>/checkers/teachers.html</loc></url>
-  <url><loc>/checkers/accountants.html</loc></url>
-  <url><loc>/checkers/marketers.html</loc></url>
-  <url><loc>/checkers/sales-reps.html</loc></url>
+  <url><loc>https://beatthefilter.com/index.html</loc></url>
+  <url><loc>https://beatthefilter.com/cheatsheet.html</loc></url>
+  <url><loc>https://beatthefilter.com/checkers/nurses.html</loc></url>
+  <url><loc>https://beatthefilter.com/checkers/software-engineers.html</loc></url>
+  <url><loc>https://beatthefilter.com/checkers/teachers.html</loc></url>
+  <url><loc>https://beatthefilter.com/checkers/accountants.html</loc></url>
+  <url><loc>https://beatthefilter.com/checkers/marketers.html</loc></url>
+  <url><loc>https://beatthefilter.com/checkers/sales-reps.html</loc></url>
 </urlset>
