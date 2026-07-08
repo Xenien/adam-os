@@ -11,14 +11,22 @@ The distribution steps below are where the money actually comes from.
 1. Sign up at [gumroad.com](https://gumroad.com) (free; they take 10% + processing per sale).
 2. Connect your bank account under **Settings → Payments** (payouts are weekly, every Friday).
 3. Create a product:
-   - **Type:** Digital product. **Name:** `JobFit Pro — ATS Resume Checker (lifetime)`.
-   - **Price:** $9. Then add a **Version/Tier** called `Coach license (commercial use)` at **$39**.
+   - **Type:** Digital product. **Name:** `JobFit Pro — The Interview Engine (lifetime)`.
+   - **Price:** $29. Then add a **Version/Tier** called `Coach license (commercial use)` at **$99**.
+   - ⚠ The site advertises "launch price $29, rises to $49 after the first 100 licenses."
+     **Actually raise it at 100 sales** — fake scarcity is illegal and brand-fatal.
    - In the product's **Content** tab, write: *"Your license key is below. Go to
      [your site URL], click 'Enter license key', paste it — Pro is unlocked forever."*
    - **Settings → check "Generate a unique license key per sale."** (This is the paywall — don't skip it.)
-4. Copy two things:
-   - your product's short URL (e.g. `https://yourname.gumroad.com/l/jobfit`)
+4. Create a **second, $0+ product**: `2026 ATS Keyword Cheat Sheet (free)` — attach a
+   PDF export of `cheatsheet.html` (open it → print → save as PDF). This is the
+   lead magnet: every download captures an email into your Gumroad audience, and
+   Gumroad's "Emails" feature sends the follow-up sequence (written for you in
+   `MARKETING.md` §3).
+5. Copy three things:
+   - your Pro product's short URL (e.g. `https://yourname.gumroad.com/l/jobfit`)
    - the permalink slug (the part after `/l/`)
+   - the free cheat-sheet product URL
 
 ## Step 2 — Configure the app (2 min)
 
@@ -27,6 +35,7 @@ Edit `assets/config.js`:
 ```js
 gumroadProductUrl: "https://yourname.gumroad.com/l/jobfit",
 gumroadProductPermalink: "jobfit",
+leadMagnetUrl: "https://yourname.gumroad.com/l/ats-cheatsheet",
 ```
 
 Commit and push.
@@ -64,10 +73,13 @@ without blinking (margin at $39). Hit both.
   Privacy-first + no-signup tools do well there.
 
 ### Day 2–3 (free)
-- **Career coach outreach (the $39 tier):** DM/email 20 resume writers and career
-  coaches on LinkedIn — search "resume writer" — with: *"Tool that generates an ATS
-  keyword report you can hand to clients — one-time $39, no subscription. Free tier
-  to try: [link]."* Coaches are the buyers with money; 2 coach sales = 9 consumer sales.
+- **Career coach outreach (the $99 tier):** DM/email 20 resume writers and career
+  coaches on LinkedIn — search "resume writer" — with: *"Tool that generates a
+  branded ATS keyword report you can hand to clients — one-time $99 commercial
+  license, no subscription. Free tier to try: [link]."* Coaches are the buyers
+  with money; 1 coach sale ≈ 3.5 consumer sales.
+- **Paid ads:** the full playbook — platforms, hooks, budgets, CAC targets, kill
+  criteria — is in `MARKETING.md` §6. Start Google Search at $30/day.
 - **Facebook groups:** job-hunting groups (millions of members). Post as a helpful free tool.
 - **Product Hunt** launch (schedule for a Tuesday–Thursday).
 
@@ -78,9 +90,9 @@ without blinking (margin at $39). Hit both.
   then 86 after 3 fixes" — this format demonstrably drives job-tool virality.
 
 ### Pricing experiments (Gumroad makes these one-click)
-- If conversion is good, raise Pro $9 → $14 (Jobscan's *monthly* price).
-- Add a "pay what you want, $9 minimum" — often raises average order value.
-- Gumroad discount codes for Reddit ("REDDIT20") let you track which channel converts.
+- $29 is the launch hypothesis; test $39/$49 with discount codes once traffic flows.
+- Gumroad discount codes ("REDDIT10", "GOOGLE10", "META10") are both the tracking
+  mechanism and the A/B test — see `MARKETING.md` §6.
 
 ---
 

@@ -28,10 +28,10 @@
 
 <main>
   <section class="hero wrap">
-    <h1>Will your resume survive the robot?</h1>
-    <p class="hero-sub">75% of resumes are rejected by applicant tracking systems before a human ever sees them.
-    Paste your resume and the job description below — get your match score, the keywords you're missing,
-    and the formatting problems, in two seconds.</p>
+    <h1>You didn't get rejected.<br>You got filtered.</h1>
+    <p class="hero-sub">Companies use screening software to throw out ~75% of resumes before a human ever reads them.
+    If you're sending applications into silence, this is almost certainly why. See exactly why yours gets cut —
+    and what to change — in 10 seconds. Free, no sign-up.</p>
     <p class="privacy-badge">🔒 <strong>100% private.</strong> The analysis runs entirely in your browser. Your resume is never uploaded, stored, or sent anywhere.</p>
   </section>
 
@@ -41,7 +41,10 @@
         <label for="resume-input">Your resume <span class="hint">(paste the text)</span></label>
         <textarea id="resume-input" spellcheck="false" placeholder="Paste your full resume text here…"></textarea>
         <div class="under-field"><span id="resume-count" class="hint">0 words</span>
-          <button type="button" class="link-btn" id="load-sample">Try with sample data</button></div>
+          <span><button type="button" class="link-btn" id="upload-btn">Upload PDF / TXT</button>
+          <span class="hint">·</span>
+          <button type="button" class="link-btn" id="load-sample">Try with sample data</button></span></div>
+        <input type="file" id="file-input" accept=".pdf,.txt,text/plain,application/pdf" hidden>
       </div>
       <div class="input-col">
         <label for="jd-input">Job description <span class="hint">(paste the posting)</span></label>
@@ -59,7 +62,9 @@
     <div class="results-head">
       <h2>Your results</h2>
       <div class="results-actions">
-        <button id="export-btn" class="btn-secondary" type="button" data-pro>Download full report</button>
+        <input id="coach-name" type="text" data-pro placeholder="Your brand on the report (optional)">
+        <button id="print-btn" class="btn-secondary" type="button" data-pro>Print / save PDF report</button>
+        <button id="export-btn" class="btn-secondary" type="button" data-pro>Download .txt</button>
       </div>
     </div>
 
@@ -131,9 +136,19 @@
       <ul id="checks-pro" class="checks-list" hidden></ul>
     </div>
 
+    <div class="card" id="rewrites-card" hidden>
+      <h3>Bullet rewrite patterns <span class="hint">— copy, fill in your real numbers, paste</span></h3>
+      <div id="rewrites-list"></div>
+    </div>
+
     <div class="card" id="tailoring-card" hidden>
       <h3>Your tailoring checklist</h3>
       <ol id="tailoring-list" class="tailoring-list"></ol>
+    </div>
+
+    <div class="card" id="bonuses-card" hidden>
+      <h3>Your Pro bonuses</h3>
+      <div id="bonuses-list"></div>
     </div>
   </section>
 
@@ -147,7 +162,8 @@
   </section>
 
   <section class="wrap" id="pricing">
-    <h2>Pricing</h2>
+    <h2>Get more interviews, or it's free</h2>
+    <p class="hint">One-time purchase. No subscription. The tool everyone else rents you for $50/month — you own it.</p>
     <div class="pricing-grid">
       <div class="card price-card">
         <h3>Free</h3>
@@ -161,34 +177,45 @@
         <button class="btn-secondary" type="button" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Start free</button>
       </div>
       <div class="card price-card featured">
-        <div class="ribbon">One-time · not a subscription</div>
-        <h3>Pro</h3>
-        <div class="price-big"><span class="price-slot">$9</span></div>
+        <div class="ribbon">Launch price — rises to $49 after the first 100</div>
+        <h3>Pro — The Interview Engine</h3>
+        <div class="price-big"><span class="price-slot">$29</span> <span class="price-anchor">$49</span></div>
         <ul class="feature-list">
-          <li>✓ Everything in Free</li>
-          <li>✓ <strong>Every</strong> missing &amp; matched keyword</li>
-          <li>✓ All 8 ATS checks with fix-it tips</li>
-          <li>✓ Personal tailoring checklist</li>
-          <li>✓ Downloadable report for every job you apply to</li>
-          <li>✓ Yours forever — works on all your devices</li>
+          <li>✓ <strong>Every</strong> missing keyword, for <strong>every</strong> job you apply to, forever <span class="value-tag">what Jobscan rents for $49.95/mo</span></li>
+          <li>✓ All 8 ATS checks with exact fix-it instructions</li>
+          <li>✓ <strong>Bullet rewrite patterns</strong> — copy, fill in your numbers, paste</li>
+          <li>✓ Print-ready PDF report per application</li>
+          <li>✓ <strong>Bonus:</strong> Recruiter outreach scripts (get seen even when filtered)</li>
+          <li>✓ <strong>Bonus:</strong> Follow-up email templates that revive dead applications</li>
+          <li>✓ <strong>Bonus:</strong> LinkedIn ATS checklist — recruiters search LinkedIn with the same keywords</li>
         </ul>
-        <button class="btn-primary unlock-cta" type="button">Get Pro — <span class="price-slot">$9</span></button>
-        <p class="hint centered">Competitors charge $50/month for this.</p>
+        <button class="btn-primary unlock-cta" type="button">Get Pro — <span class="price-slot">$29</span> once</button>
+        <p class="hint centered">One month of Jobscan costs more than owning this forever.</p>
       </div>
       <div class="card price-card">
-        <h3>Coach</h3>
-        <div class="price-big">$39</div>
+        <h3>Coach — Commercial license</h3>
+        <div class="price-big">$99</div>
         <ul class="feature-list">
           <li>✓ Everything in Pro</li>
-          <li>✓ <strong>Commercial license</strong> — use on unlimited client resumes</li>
-          <li>✓ Downloadable reports you can hand to clients</li>
+          <li>✓ Use on <strong>unlimited client resumes</strong>, commercially</li>
+          <li>✓ <strong>Your brand</strong> on every client-ready PDF report</li>
           <li>✓ For career coaches, resume writers &amp; recruiters</li>
-          <li>✓ Pays for itself with your first client</li>
         </ul>
-        <button class="btn-secondary unlock-cta" type="button">Get Coach license</button>
-        <p class="hint centered">Coaches charge $150–$700 per resume.</p>
+        <button class="btn-secondary unlock-cta" type="button">Get Coach license — $99</button>
+        <p class="hint centered">You charge $150–$700 per resume. This is less than one report.</p>
       </div>
     </div>
+
+    <div class="card guarantee-box">
+      <h3>🛡 The Interview Guarantee</h3>
+      <p>Use JobFit on five real applications. If your interview rate doesn't improve within 30 days,
+      reply to your Gumroad receipt for a <strong>100% refund — and keep the bonuses</strong>.
+      You risk nothing. The software risks its price tag.</p>
+    </div>
+
+    <p class="lead-magnet-line centered">Not ready to scan? Grab the free
+      <a id="lead-magnet-link" href="cheatsheet.html"><strong>2026 ATS Keyword Cheat Sheet</strong></a>
+      — the most-searched keywords for 8 major fields, plus the 8 formatting rules ATS parsers punish.</p>
   </section>
 
   <section class="wrap" id="faq">
@@ -197,8 +224,8 @@
     <details><summary>How is the score calculated?</summary><p>We extract the skills, tools, and repeated terms the job description emphasizes, weight them by importance, and measure how many appear in your resume (80% of the score). The remaining 20% comes from ATS formatting checks like contact info, standard section headings, and quantified achievements.</p></details>
     <details><summary>Why keywords? Isn't that gaming the system?</summary><p>Applicant tracking systems and recruiters both search by keywords. If you have the skill but your resume says it differently than the posting does, you lose. JobFit only recommends adding keywords <em>that are true of you</em> — it's translation, not fabrication.</p></details>
     <details><summary>How does the Pro unlock work?</summary><p>You buy once through Gumroad (secure card/PayPal checkout) and instantly receive a license key by email. Paste it into JobFit and Pro is unlocked on that device forever. Use the same key on your other devices too.</p></details>
-    <details><summary>What's the Coach license?</summary><p>Same product, commercial rights. If you're a career coach, resume writer, or recruiter running client resumes through JobFit as part of a paid service, buy the Coach tier at checkout. One coach client typically pays you 5–15× what the license costs.</p></details>
-    <details><summary>Refunds?</summary><p>If it didn't help you, reply to your Gumroad receipt email within 7 days for a full refund.</p></details>
+    <details><summary>What's the Coach license?</summary><p>Same product, commercial rights plus your brand on every report. If you're a career coach, resume writer, or recruiter running client resumes through JobFit as part of a paid service, buy the Coach tier at checkout. One client typically pays you 2–7× what the license costs.</p></details>
+    <details><summary>How does the guarantee work?</summary><p>Buy Pro, use it on at least five real applications, and if your interview rate doesn't improve within 30 days, reply to your Gumroad receipt email for a full refund. No forms, no hoops, and you keep the bonus templates.</p></details>
   </section>
 </main>
 

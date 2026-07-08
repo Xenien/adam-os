@@ -256,6 +256,26 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .verify-status.ok { color: var(--good-text); }
 .verify-status.err { color: var(--critical); }
 
+/* offer stack & guarantee */
+.price-anchor { font-size: 1.2rem; color: var(--muted); text-decoration: line-through; font-weight: 400; }
+.value-tag { display: block; color: var(--muted); font-size: 0.78rem; }
+.guarantee-box { margin-top: 20px; border: 2px solid var(--good); }
+.guarantee-box p { margin: 0; color: var(--ink-2); }
+.lead-magnet-line { margin-top: 24px; color: var(--ink-2); }
+
+/* rewrites & bonuses */
+.rewrite-block { padding: 10px 0; border-bottom: 1px solid var(--hairline); }
+.rewrite-block:last-of-type { border-bottom: none; }
+.rewrite-kw { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+.rewrite-row { display: flex; gap: 12px; align-items: baseline; }
+.rewrite-text { flex: 1; font-size: 0.84rem; color: var(--ink-2); background: var(--page); padding: 8px 10px; border-radius: 8px; display: block; }
+#bonuses-list details { border: 1px solid var(--hairline); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+#bonuses-list summary { font-weight: 600; cursor: pointer; }
+.bonus-item { margin: 12px 0; }
+.bonus-item-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
+.bonus-text { white-space: pre-wrap; font-family: inherit; font-size: 0.86rem; color: var(--ink-2); background: var(--page); padding: 10px 12px; border-radius: 8px; margin: 0 0 4px; }
+#coach-name { padding: 9px 12px; font: inherit; font-size: 0.85rem; background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 10px; width: 220px; }
+
 /* pro state: hide upsells when unlocked */
 body.pro .lock-overlay, body.pro .locked-block { display: none; }
 body.pro .unlock-cta { display: none; }

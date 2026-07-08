@@ -382,6 +382,9 @@
       tCard.hidden = true;
     }
 
+    renderRewrites(result);
+    renderBonuses();
+
     document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -396,6 +399,155 @@
     if (items.length === 0) items.push("Nothing left to fix — this resume is well tailored. Apply!");
     items.push("Re-run the check after editing. Aim for 80+ before you submit.");
     return items;
+  }
+
+  /* ---------------------------------------------------- bullet rewrites */
+
+  var REWRITE_PATTERNS = [
+    "Used {kw} to [what you delivered], improving [metric] by [X]% over [period]",
+    "Led [project or initiative] leveraging {kw}, resulting in [quantified outcome]",
+    "Built/managed [thing] with {kw}, cutting [time/cost/errors] by [X]%",
+    "Trained [N] teammates on {kw}, raising team [output metric] by [X]%"
+  ];
+
+  function renderRewrites(result) {
+    var card = document.getElementById("rewrites-card");
+    var list = document.getElementById("rewrites-list");
+    list.textContent = "";
+    var targets = result.missing.slice(0, 5);
+    if (!isPro || targets.length === 0) { card.hidden = true; return; }
+    card.hidden = false;
+    targets.forEach(function (k, i) {
+      var block = el("div", "rewrite-block");
+      block.appendChild(el("div", "rewrite-kw", k.term));
+      var pattern = REWRITE_PATTERNS[i % REWRITE_PATTERNS.length].replace("{kw}", k.term);
+      var row = el("div", "rewrite-row");
+      var txt = el("code", "rewrite-text", pattern);
+      var btn = el("button", "link-btn", "Copy");
+      btn.type = "button";
+      btn.addEventListener("click", function () {
+        navigator.clipboard.writeText(pattern).then(function () {
+          btn.textContent = "Copied ✓";
+          setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+        });
+      });
+      row.appendChild(txt); row.appendChild(btn);
+      block.appendChild(row);
+      list.appendChild(block);
+    });
+    list.appendChild(el("p", "hint", "Never claim a skill you don't have — these patterns are for translating real experience into the posting's language."));
+  }
+
+  /* ------------------------------------------------------------- bonuses */
+
+  var BONUSES = [
+    { title: "Recruiter outreach scripts", items: [
+      ["After you apply (LinkedIn DM to the recruiter)", "Hi [Name] — I just applied for the [Role] opening. My background in [top 2 matched keywords] lines up closely with what the posting asks for, and I know applications can get buried, so I wanted to introduce myself directly. Happy to share anything useful — either way, good luck filling the role!"],
+      ["Referral ask (someone you know at the company)", "Hey [Name] — I saw [Company] is hiring a [Role] and I'm applying this week. My experience with [keyword] maps well to it. Would you be open to referring me, or pointing me to whoever owns the hire? Happy to send you a 3-line blurb that makes it zero work."],
+      ["Hiring manager direct", "Hi [Name] — I applied for [Role] on your team. One thing that won't show on my resume: [1 sentence, specific result with a number]. If it's useful I'd love 15 minutes; if the pipeline's already deep, no worries at all."],
+      ["The bump (no reply after 5–7 days)", "Hi [Name] — floating this to the top in case it got buried. Still very interested in [Role]; my [keyword] experience is the closest match I've seen to a posting in months. Anything you need from me?"]
+    ]},
+    { title: "Follow-up email templates", items: [
+      ["Day-5 application follow-up", "Subject: [Role] application — quick note\n\nHi [Name],\n\nI applied for [Role] on [date] and wanted to follow up directly. The posting emphasizes [top 2 keywords from your JobFit report] — at [Current/Last Company] I [one-sentence quantified result using those keywords].\n\nI'd welcome a conversation whenever suits. Thanks for your time!\n\n[Your name] · [phone] · [LinkedIn]"],
+      ["Post-interview thank you (send within 24h)", "Subject: Thank you — [Role] interview\n\nHi [Name],\n\nThank you for the conversation today. Our discussion about [specific topic] confirmed this is the kind of problem I want to work on. One thing I'd add to my answer about [question]: [one sharp sentence].\n\nLooking forward to next steps.\n\n[Your name]"]
+    ]},
+    { title: "LinkedIn ATS checklist", items: [
+      ["Why this matters", "Recruiters search LinkedIn with the same keywords as the job posting. Run your JobFit report, then apply the missing keywords here too:\n\n1. Headline: role + top 3 keywords, not 'Seeking opportunities'.\n2. About section: first 2 lines contain your top keywords (that's what shows uncollapsed).\n3. Skills section: add every matched + honestly-missing keyword (LinkedIn allows 50).\n4. Experience bullets: mirror your tailored resume bullets.\n5. 'Open to work' set to recruiters-only with exact target titles.\n6. Custom URL (linkedin.com/in/yourname).\n7. Location set to your target market.\n8. A real headshot — profiles with photos get ~14× more views.\n9. Get 2–3 recommendations that mention your keywords.\n10. Turn on job alerts for target titles and apply within 24h of posting — early applicants get read."]
+    ]}
+  ];
+
+  function renderBonuses() {
+    var card = document.getElementById("bonuses-card");
+    var list = document.getElementById("bonuses-list");
+    if (!isPro) { card.hidden = true; return; }
+    card.hidden = false;
+    if (list.childElementCount > 0) return; // static content, render once
+    BONUSES.forEach(function (b) {
+      var det = document.createElement("details");
+      var sum = document.createElement("summary");
+      sum.textContent = b.title;
+      det.appendChild(sum);
+      b.items.forEach(function (pair) {
+        var wrap = el("div", "bonus-item");
+        wrap.appendChild(el("div", "bonus-item-title", pair[0]));
+        var pre = el("pre", "bonus-text", pair[1]);
+        wrap.appendChild(pre);
+        var btn = el("button", "link-btn", "Copy");
+        btn.type = "button";
+        btn.addEventListener("click", function () {
+          navigator.clipboard.writeText(pair[1]).then(function () {
+            btn.textContent = "Copied ✓";
+            setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+          });
+        });
+        wrap.appendChild(btn);
+        det.appendChild(wrap);
+      });
+      list.appendChild(det);
+    });
+  }
+
+  /* ---------------------------------------------------------- file upload */
+
+  var pdfJsPromise = null;
+  function loadPdfJs() {
+    if (pdfJsPromise) return pdfJsPromise;
+    pdfJsPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      s.onload = function () {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        resolve(window.pdfjsLib);
+      };
+      s.onerror = function () { pdfJsPromise = null; reject(new Error("Couldn't load the PDF reader. Check your connection, or paste the text instead.")); };
+      document.head.appendChild(s);
+    });
+    return pdfJsPromise;
+  }
+
+  function extractPdfText(file) {
+    return loadPdfJs().then(function (pdfjsLib) {
+      return file.arrayBuffer().then(function (buf) {
+        return pdfjsLib.getDocument({ data: buf }).promise;
+      }).then(function (doc) {
+        var pages = [];
+        for (var i = 1; i <= doc.numPages; i++) pages.push(doc.getPage(i));
+        return Promise.all(pages).then(function (pgs) {
+          return Promise.all(pgs.map(function (p) { return p.getTextContent(); }));
+        });
+      }).then(function (contents) {
+        return contents.map(function (c) {
+          var out = "", lastY = null;
+          c.items.forEach(function (item) {
+            var y = item.transform ? item.transform[5] : null;
+            if (lastY !== null && y !== null && Math.abs(y - lastY) > 2) out += "\n";
+            else if (out && !out.endsWith("\n")) out += " ";
+            out += item.str;
+            if (y !== null) lastY = y;
+          });
+          return out;
+        }).join("\n\n");
+      });
+    });
+  }
+
+  function handleFile(file) {
+    var resumeInput = document.getElementById("resume-input");
+    var counter = document.getElementById("resume-count");
+    counter.textContent = "Reading " + file.name + "…";
+    var done = function (text) {
+      resumeInput.value = text.trim();
+      resumeInput.dispatchEvent(new Event("input"));
+    };
+    if (/\.pdf$/i.test(file.name) || file.type === "application/pdf") {
+      extractPdfText(file).then(done).catch(function (e) {
+        counter.textContent = "0 words";
+        alert(e.message || "Couldn't read that PDF. If it's a scanned image, paste the text instead.");
+      });
+    } else {
+      file.text().then(done);
+    }
   }
 
   /* ---------------------------------------------------------------- report */
@@ -437,6 +589,49 @@
     a.download = "jobfit-report.txt";
     a.click();
     URL.revokeObjectURL(a.href);
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  // Print-ready report in a new window — the browser's "Save as PDF" does the rest.
+  function printReport() {
+    if (!lastResult) return;
+    var r = lastResult, b = band(r.score);
+    var brand = (document.getElementById("coach-name").value || "").trim();
+    var chips = function (arr, sym) {
+      return arr.map(function (k) { return "<span class='chip'>" + sym + " " + escapeHtml(k.term) + "</span>"; }).join(" ");
+    };
+    var checksHtml = r.checks.map(function (c) {
+      return "<tr><td class='" + (c.pass ? "pass" : "fail") + "'>" + (c.pass ? "PASS" : "FIX") + "</td><td><strong>" +
+        escapeHtml(c.label) + "</strong><br><span class='tip'>" + escapeHtml(c.tip) + "</span></td></tr>";
+    }).join("");
+    var checklist = buildChecklist(r).map(function (i) { return "<li>" + escapeHtml(i) + "</li>"; }).join("");
+    var w = window.open("", "_blank");
+    if (!w) { alert("Your browser blocked the report window — allow pop-ups for this site and try again."); return; }
+    w.document.write("<!DOCTYPE html><html><head><title>ATS Match Report</title><style>" +
+      "body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#0b0b0b;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}" +
+      "h1{font-size:1.5rem;margin-bottom:2px}h2{font-size:1.05rem;margin:24px 0 8px;border-bottom:1px solid #e1e0d9;padding-bottom:4px}" +
+      ".meta{color:#52514e;font-size:.9rem}.score{font-size:2.6rem;font-weight:700;margin:12px 0 0}" +
+      ".chip{display:inline-block;border:1px solid #ccc;border-radius:999px;padding:2px 10px;font-size:.82rem;margin:2px}" +
+      "table{border-collapse:collapse;width:100%;font-size:.88rem}td{padding:6px 8px;vertical-align:top;border-bottom:1px solid #eee}" +
+      ".pass{color:#006300;font-weight:700}.fail{color:#d03b3b;font-weight:700}.tip{color:#52514e}" +
+      "ol{font-size:.9rem}footer{margin-top:28px;color:#898781;font-size:.8rem}" +
+      "@media print{body{margin:0 auto}}</style></head><body>" +
+      "<h1>ATS Match Report</h1>" +
+      "<p class='meta'>" + (brand ? "Prepared by " + escapeHtml(brand) + " · " : "") + "Generated with JobFit — analysis performed locally, no resume data transmitted</p>" +
+      "<div class='score'>" + r.score + "/100 — " + b.label + "</div>" +
+      "<p>" + escapeHtml(b.summary) + "</p>" +
+      "<p class='meta'>Keywords matched: " + r.matched.length + " of " + r.keywords.length +
+      " · ATS checks passed: " + r.checksPassed + " of " + r.checks.length + " · " + r.wordCount + " words</p>" +
+      "<h2>Missing keywords (add where genuinely true)</h2><div>" + (r.missing.length ? chips(r.missing, "+") : "None — fully covered.") + "</div>" +
+      "<h2>Matched keywords</h2><div>" + (r.matched.length ? chips(r.matched, "✓") : "None.") + "</div>" +
+      "<h2>ATS formatting checks</h2><table>" + checksHtml + "</table>" +
+      "<h2>Tailoring checklist</h2><ol>" + checklist + "</ol>" +
+      "<footer>This report reflects automated keyword and formatting analysis against one specific job description. Only add keywords that are true of the candidate.</footer>" +
+      "<script>window.onload=function(){window.print()}<\/script></body></html>");
+    w.document.close();
   }
 
   /* ------------------------------------------------------ pro / licensing */
@@ -513,6 +708,9 @@
     if (!cfg.gumroadProductUrl || cfg.gumroadProductUrl.indexOf("REPLACE_ME") !== -1) {
       buy.textContent = "⚠ Owner: set your Gumroad link in assets/config.js";
     }
+    if (cfg.leadMagnetUrl && cfg.leadMagnetUrl.indexOf("REPLACE_ME") === -1) {
+      document.getElementById("lead-magnet-link").href = cfg.leadMagnetUrl;
+    }
   }
 
   function initTheme() {
@@ -559,6 +757,22 @@
     });
 
     document.getElementById("export-btn").addEventListener("click", downloadReport);
+    document.getElementById("print-btn").addEventListener("click", printReport);
+
+    var fileInput = document.getElementById("file-input");
+    document.getElementById("upload-btn").addEventListener("click", function () { fileInput.click(); });
+    fileInput.addEventListener("change", function () {
+      if (fileInput.files[0]) handleFile(fileInput.files[0]);
+      fileInput.value = "";
+    });
+    resumeInput.addEventListener("dragover", function (e) { e.preventDefault(); });
+    resumeInput.addEventListener("drop", function (e) {
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f && (/\.(pdf|txt)$/i.test(f.name) || f.type === "application/pdf" || f.type === "text/plain")) {
+        e.preventDefault();
+        handleFile(f);
+      }
+    });
     document.getElementById("nav-unlock").addEventListener("click", openModal);
     document.querySelectorAll(".unlock-cta").forEach(function (b) { b.addEventListener("click", openModal); });
     document.querySelector(".modal-close").addEventListener("click", closeModal);

@@ -18,5 +18,9 @@ window.JOBFIT_CONFIG = {
   gumroadProductId: "",          // e.g. "AbCdEfGhIjKlMnOp=="
   gumroadProductPermalink: "REPLACE_ME", // e.g. "jobfit" (the slug after /l/)
 
-  priceLabel: "$9",
+  priceLabel: "$29",
+
+  // Optional: your Gumroad $0 lead-magnet product URL (captures emails).
+  // Until set, the cheat sheet link points at the local cheatsheet.html page.
+  leadMagnetUrl: "REPLACE_ME",
 };

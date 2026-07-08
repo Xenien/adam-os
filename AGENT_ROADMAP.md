@@ -1,0 +1,56 @@
+# Agent Improvement Roadmap
+
+This file drives the autonomous improvement loop. An agent session runs daily,
+picks the **topmost unchecked item**, implements it, verifies it, checks it off
+(edit this file: `[ ]` → `[x]` + one-line note), commits, and pushes.
+
+## Hard rules — read before every run
+
+1. Work ONLY on branch `claude/ai-revenue-app-concept-wxcbr0`. Never force-push.
+2. **One item per run.** Small and shipped beats big and broken.
+3. Verify before committing: `npm i playwright-core --no-save && node tools/smoke-test.js`
+   must print `SMOKE TEST PASSED`. If your change breaks it, fix or revert.
+4. **Never fabricate:** no fake testimonials, fake review counts, fake user numbers,
+   fake "as seen in" logos. Honest scarcity only (the launch-price counter must
+   reflect what the owner actually does on Gumroad).
+5. The privacy claim is load-bearing: resume text must NEVER be sent anywhere.
+   No analytics that touch input text. No third-party scripts beyond pdf.js.
+6. Don't change prices or the offer structure — that's the owner's call.
+7. Keep every page working with zero build step (plain HTML/CSS/JS).
+8. If today is after 2026-07-12 (Sunday), make no changes; reply that the loop
+   has ended and remind the owner to disable the Routine.
+
+## Backlog (priority order)
+
+- [ ] **SEO field pages.** Create `checkers/` pages for 6 fields (nurses, software
+  engineers, teachers, accountants, marketers, sales reps): each a short page
+  titled "ATS Resume Checker for [Field] (2026)" with field-specific keyword
+  guidance (reuse the dictionary in `assets/app.js`), an embedded link to the
+  main scanner, and proper meta/OG tags. Add a sitemap.xml and link them in the
+  site footer. This is the compounding free-traffic channel.
+- [ ] **.docx upload.** Add Word-file support to the resume upload using mammoth.js
+  from a CDN (lazy-loaded like pdf.js). Most resumes are .docx — this is the
+  single biggest effort-reducer left.
+- [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
+  is thin on: education/teaching, legal, construction/trades, hospitality,
+  government/defense, creative/media. Keep the existing format; verify no
+  duplicates; smoke test must pass.
+- [ ] **Score improvement preview.** On the free tier, show "adding the top 3
+  missing keywords would raise your score to ~N" (compute by simulating the
+  additions). Concrete dream-outcome math is the strongest free→paid nudge.
+- [ ] **JD quality guard.** If the pasted job description is very short or looks
+  like a URL, show a helpful inline message instead of weak results.
+- [ ] **FAQ schema markup.** Add JSON-LD FAQPage structured data to index.html
+  (rich results in Google) and Product schema for the Pro offer.
+- [ ] **Per-check anchors + copy tweaks.** Each ATS check gets an id so SEO pages
+  and emails can deep-link (e.g. `/#check-action-verbs`).
+- [ ] **Accessibility pass.** Keyboard-navigate the whole flow; aria-live on the
+  results region; focus management when the modal opens/closes.
+- [ ] **Performance.** Inline critical CSS above the fold; defer app.js; verify
+  Lighthouse ≥95 on mobile (run via Playwright if available).
+- [ ] **More rewrite patterns.** Grow REWRITE_PATTERNS to ~12, keyed to keyword
+  type (tool vs. method vs. soft skill) so suggestions feel less templated.
+
+## Log
+
+- 2026-07-08 — Loop created. Backlog seeded by the initial build session.

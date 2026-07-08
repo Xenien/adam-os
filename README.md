@@ -1,15 +1,16 @@
 # 🎯 JobFit — ATS Resume Match Checker
 
 A sellable, zero-running-cost web product: paste a resume + a job description, get an
-instant ATS match score, missing keywords, and 8 formatting checks. The entire
-analysis runs client-side in the browser — no server, no AI API costs, no data
-collection. Free tier hooks users; a one-time **$9 Pro** / **$39 Coach** unlock
-(via Gumroad license keys) is the revenue.
+instant ATS match score, missing keywords, 8 formatting checks, bullet rewrite
+patterns, and a printable PDF report. The entire analysis runs client-side in the
+browser — no server, no AI API costs, no data collection. Free tier hooks users;
+a one-time **$29 Pro** / **$99 Coach** unlock (via Gumroad license keys) is the
+revenue, structured as a Grand Slam Offer (stack + guarantee — see `MARKETING.md`).
 
 **Why this sells:** 90%+ of companies filter resumes with applicant tracking
 systems, the market leader (Jobscan) charges **$49.95/month** for this exact
-feature, and career coaches charge **$150–$700 per resume** — a one-time $9/$39
-alternative is an impulse purchase. Every sale is ~100% margin.
+feature, and career coaches charge **$150–$700 per resume** — a one-time $29/$99
+alternative with an interview guarantee is an impulse purchase. ~100% margin.
 
 ## Stack
 
