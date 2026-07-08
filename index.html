@@ -659,6 +659,8 @@ load();
 renderFoundations();
 renderChallenge();
 refresh();
+// offline support
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
 </html>
