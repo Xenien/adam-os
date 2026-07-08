@@ -713,7 +713,13 @@
       });
   }
 
+  // Google Ads conversion signals — guarded so ad blockers can't break the app.
+  function track(eventName, params) {
+    try { if (typeof window.gtag === "function") window.gtag("event", eventName, params || {}); } catch (e) { /* never let analytics break the product */ }
+  }
+
   function openModal() {
+    track("begin_checkout", { value: 29, currency: "USD" });
     document.getElementById("unlock-modal").hidden = false;
     document.getElementById("license-input").focus();
   }
@@ -765,6 +771,12 @@
     if (cfg.leadMagnetUrl && cfg.leadMagnetUrl.indexOf("REPLACE_ME") === -1) {
       document.getElementById("lead-magnet-link").href = cfg.leadMagnetUrl;
     }
+    document.getElementById("lead-magnet-link").addEventListener("click", function () {
+      track("generate_lead");
+    });
+    document.getElementById("buy-link").addEventListener("click", function () {
+      track("begin_checkout", { value: 29, currency: "USD" });
+    });
   }
 
   function initTheme() {

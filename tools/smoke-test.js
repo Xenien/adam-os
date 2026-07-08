@@ -44,7 +44,14 @@ function assert(cond, msg) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
-  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+  page.on('console', m => {
+    if (m.type() !== 'error') return;
+    // Third-party scripts (Google tag, pdf.js CDN, Gumroad) may be unreachable
+    // in sandboxed test environments — their load failures are not app bugs.
+    const src = (m.location() && m.location().url) || '';
+    if (/googletagmanager|googleadservices|google-analytics|cdnjs\.cloudflare|gumroad/.test(src)) return;
+    errors.push(m.text());
+  });
 
   // free flow
   await page.goto('http://localhost:8901/index.html');

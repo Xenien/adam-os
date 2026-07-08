@@ -14,7 +14,9 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
    fake "as seen in" logos. Honest scarcity only (the launch-price counter must
    reflect what the owner actually does on Gumroad).
 5. The privacy claim is load-bearing: resume text must NEVER be sent anywhere.
-   No analytics that touch input text. No third-party scripts beyond pdf.js.
+   No analytics that touch input text. Permitted third-party scripts: pdf.js
+   and the owner-approved Google Ads tag (AW-18309597951) in index.html —
+   do not remove it, and never attach it to the resume/JD textareas.
 6. Don't change prices or the offer structure — that's the owner's call.
 7. Keep every page working with zero build step (plain HTML/CSS/JS).
 8. If today is after 2026-07-12 (Sunday), make no changes; reply that the loop
