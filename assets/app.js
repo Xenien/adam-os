@@ -586,6 +586,34 @@
     });
   }
 
+  var mammothPromise = null;
+  function loadMammoth() {
+    if (mammothPromise) return mammothPromise;
+    mammothPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js";
+      s.onload = function () { resolve(window.mammoth); };
+      s.onerror = function () { mammothPromise = null; reject(new Error("Couldn't load the Word-file reader. Check your connection, or paste the text instead.")); };
+      document.head.appendChild(s);
+    });
+    return mammothPromise;
+  }
+
+  function extractDocxText(file) {
+    return loadMammoth().then(function (mammoth) {
+      return file.arrayBuffer().then(function (buf) {
+        return mammoth.extractRawText({ arrayBuffer: buf });
+      }).then(function (result) {
+        return result.value;
+      });
+    });
+  }
+
+  function isDocx(file) {
+    return /\.docx$/i.test(file.name) ||
+      file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  }
+
   function handleFile(file) {
     var resumeInput = document.getElementById("resume-input");
     var counter = document.getElementById("resume-count");
@@ -598,6 +626,11 @@
       extractPdfText(file).then(done).catch(function (e) {
         counter.textContent = "0 words";
         alert(e.message || "Couldn't read that PDF. If it's a scanned image, paste the text instead.");
+      });
+    } else if (isDocx(file)) {
+      extractDocxText(file).then(done).catch(function (e) {
+        counter.textContent = "0 words";
+        alert(e.message || "Couldn't read that Word file. Try saving it as .docx again, or paste the text instead.");
       });
     } else {
       file.text().then(done);
@@ -858,7 +891,7 @@
     resumeInput.addEventListener("dragover", function (e) { e.preventDefault(); });
     resumeInput.addEventListener("drop", function (e) {
       var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-      if (f && (/\.(pdf|txt)$/i.test(f.name) || f.type === "application/pdf" || f.type === "text/plain")) {
+      if (f && (/\.(pdf|txt|docx)$/i.test(f.name) || f.type === "application/pdf" || f.type === "text/plain" || f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
         e.preventDefault();
         handleFile(f);
       }

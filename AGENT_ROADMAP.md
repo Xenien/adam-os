@@ -31,9 +31,10 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   main scanner, and proper meta/OG tags. Add a sitemap.xml and link them in the
   site footer. This is the compounding free-traffic channel.
   *Done 2026-07-08: 6 pages in `checkers/`, sitemap.xml, footer "Field guides" links.*
-- [ ] **.docx upload.** Add Word-file support to the resume upload using mammoth.js
+- [x] **.docx upload.** Add Word-file support to the resume upload using mammoth.js
   from a CDN (lazy-loaded like pdf.js). Most resumes are .docx — this is the
   single biggest effort-reducer left.
+  *Done 2026-07-09: mammoth 1.8.0 lazy-loaded from cdnjs; handleFile routes .docx via extractRawText; accept attr, button label, and drag-drop filter updated; graceful fallback messages.*
 - [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
   is thin on: education/teaching, legal, construction/trades, hospitality,
   government/defense, creative/media. Keep the existing format; verify no
@@ -58,3 +59,4 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 - 2026-07-08 — Loop created. Backlog seeded by the initial build session.
 - 2026-07-08 — SEO field pages shipped: checkers/{nurses,software-engineers,teachers,accountants,marketers,sales-reps}.html (field intro, keyword list from the app dictionary, 3 tips, CTA to the scanner, meta/OG tags), sitemap.xml at root, "Field guides" links in the index footer. Smoke test passed.
+- 2026-07-09 — .docx upload shipped: mammoth.js 1.8.0 lazy-loaded from cdnjs only when a Word file is chosen (mirrors the pdf.js loader), handleFile routes .docx/officedocument MIME through mammoth.extractRawText, file-input accept + "Upload PDF / DOCX / TXT" label + drag-drop filter updated, graceful error alerts suggest pasting text. Smoke test passed.
