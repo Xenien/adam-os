@@ -44,6 +44,16 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   3 missing keywords; projection line in the missing-keywords lock overlay,
   shown only to free users and only when the gain is ≥3 points; smoke-test
   asserts it renders with a projection above the real score (sample: 21 → ~36).*
+- [ ] **SEO wave 2 (acquisition priority — ads paused, organic is the engine).**
+  (a) Six more checker pages in `checkers/`: project-managers, data-analysts,
+  customer-service, human-resources, mechanical-engineers, warehouse-logistics —
+  same pattern as wave 1. (b) Three guide articles in `guides/`:
+  "why-resumes-get-rejected.html" (Why your resume gets rejected by ATS — and
+  how to fix it), "ats-resume-format.html" (ATS resume format: the 8 rules),
+  "resume-keywords.html" (How to find the right resume keywords for any job).
+  800–1200 words each, honest content drawn from the app's actual checks and
+  dictionary, strong CTA to the scanner, meta/OG tags, cross-links. (c) Add all
+  new URLs to sitemap.xml and the index footer.
 - [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
   is thin on: education/teaching, legal, construction/trades, hospitality,
   government/defense, creative/media. Keep the existing format; verify no
