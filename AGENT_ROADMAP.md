@@ -44,7 +44,7 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   3 missing keywords; projection line in the missing-keywords lock overlay,
   shown only to free users and only when the gain is ≥3 points; smoke-test
   asserts it renders with a projection above the real score (sample: 21 → ~36).*
-- [ ] **SEO wave 2 (acquisition priority — ads paused, organic is the engine).**
+- [x] **SEO wave 2 (acquisition priority — ads paused, organic is the engine).**
   (a) Six more checker pages in `checkers/`: project-managers, data-analysts,
   customer-service, human-resources, mechanical-engineers, warehouse-logistics —
   same pattern as wave 1. (b) Three guide articles in `guides/`:
@@ -54,6 +54,12 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   800–1200 words each, honest content drawn from the app's actual checks and
   dictionary, strong CTA to the scanner, meta/OG tags, cross-links. (c) Add all
   new URLs to sitemap.xml and the index footer.
+  *Done 2026-07-10: 6 new checker pages (project-managers, data-analysts,
+  customer-service, human-resources, mechanical-engineers, warehouse-logistics)
+  mirroring the wave-1 template with dictionary-verified keyword lists; 3 guide
+  articles in `guides/` (800–860 words each, drawn from the app's 8 checks and
+  keyword logic, CTAs to the scanner, meta/OG tags, cross-linked to checkers);
+  sitemap.xml +9 URLs; index footer extended + new "Guides" list. Smoke test passed.*
 - [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
   is thin on: education/teaching, legal, construction/trades, hospitality,
   government/defense, creative/media. Keep the existing format; verify no
@@ -73,6 +79,7 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-10 — SEO wave 2 shipped: checkers/{project-managers,data-analysts,customer-service,human-resources,mechanical-engineers,warehouse-logistics}.html (same structure/voice as wave 1, keyword lists verified programmatically against the SKILLS dictionary, only the existing 75%/90% stats used), guides/{why-resumes-get-rejected,ats-resume-format,resume-keywords}.html (801/819/856 words, content drawn from the app's real 8 checks and keyword-extraction logic, strong CTA to ../index.html#app, meta description + OG tags, cross-links between guides and checkers), sitemap.xml +9 absolute URLs, index footer Field-guides list extended + new Guides list. Smoke test passed.
 - 2026-07-08 — Loop created. Backlog seeded by the initial build session.
 - 2026-07-08 — SEO field pages shipped: checkers/{nurses,software-engineers,teachers,accountants,marketers,sales-reps}.html (field intro, keyword list from the app dictionary, 3 tips, CTA to the scanner, meta/OG tags), sitemap.xml at root, "Field guides" links in the index footer. Smoke test passed.
 - 2026-07-10 — Score improvement preview shipped: pure `projectedScore(result, topN)` moves the top-3 missing keywords' weights into the matched side of the coverage math (no mutation of the real result); free-tier lock overlay now shows "Adding just the top 3 keywords above would take your score from X to ~Y" (numbers in primary ink, hidden if the gain is under 3 points or the user is Pro); minimal honest copy tweak on the locked-count line; smoke test asserts the projection renders and beats the displayed score. Sample data: 21 → ~36. Smoke test passed.
