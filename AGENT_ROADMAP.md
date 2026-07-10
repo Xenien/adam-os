@@ -35,11 +35,15 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   from a CDN (lazy-loaded like pdf.js). Most resumes are .docx — this is the
   single biggest effort-reducer left.
   *Done 2026-07-09: mammoth 1.8.0 lazy-loaded from cdnjs; handleFile routes .docx via extractRawText; accept attr, button label, and drag-drop filter updated; graceful fallback messages.*
-- [ ] **Score improvement preview.** On the free tier, show "adding the top 3
+- [x] **Score improvement preview.** On the free tier, show "adding the top 3
   missing keywords would raise your score to ~N" (compute by simulating the
   additions). Concrete dream-outcome math is the strongest free→paid nudge.
   *(Moved ahead of dictionary expansion 2026-07-10: day-1 ad data shows strong
   CTR but the free→paid bridge is the funnel's weakest link.)*
+  *Done 2026-07-10: pure `projectedScore()` in app.js simulates matching the top
+  3 missing keywords; projection line in the missing-keywords lock overlay,
+  shown only to free users and only when the gain is ≥3 points; smoke-test
+  asserts it renders with a projection above the real score (sample: 21 → ~36).*
 - [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
   is thin on: education/teaching, legal, construction/trades, hospitality,
   government/defense, creative/media. Keep the existing format; verify no
@@ -61,4 +65,5 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 - 2026-07-08 — Loop created. Backlog seeded by the initial build session.
 - 2026-07-08 — SEO field pages shipped: checkers/{nurses,software-engineers,teachers,accountants,marketers,sales-reps}.html (field intro, keyword list from the app dictionary, 3 tips, CTA to the scanner, meta/OG tags), sitemap.xml at root, "Field guides" links in the index footer. Smoke test passed.
+- 2026-07-10 — Score improvement preview shipped: pure `projectedScore(result, topN)` moves the top-3 missing keywords' weights into the matched side of the coverage math (no mutation of the real result); free-tier lock overlay now shows "Adding just the top 3 keywords above would take your score from X to ~Y" (numbers in primary ink, hidden if the gain is under 3 points or the user is Pro); minimal honest copy tweak on the locked-count line; smoke test asserts the projection renders and beats the displayed score. Sample data: 21 → ~36. Smoke test passed.
 - 2026-07-09 — .docx upload shipped: mammoth.js 1.8.0 lazy-loaded from cdnjs only when a Word file is chosen (mirrors the pdf.js loader), handleFile routes .docx/officedocument MIME through mammoth.extractRawText, file-input accept + "Upload PDF / DOCX / TXT" label + drag-drop filter updated, graceful error alerts suggest pasting text. Smoke test passed.

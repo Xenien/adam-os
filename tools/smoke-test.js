@@ -62,6 +62,9 @@ function assert(cond, msg) {
   assert(score >= 0 && score <= 100, 'score in range (' + score + ')');
   assert((await page.$$('#missing-free .chip')).length === 3, 'free tier shows exactly 3 missing keywords');
   assert(await page.isVisible('#missing-locked .lock-overlay'), 'paywall overlay visible for free users');
+  assert(await page.isVisible('#score-projection'), 'score projection line visible for free users');
+  const projTo = parseInt((await page.textContent('#proj-to')).replace(/[^0-9]/g, ''), 10);
+  assert(projTo > score, 'projected score (' + projTo + ') exceeds current score (' + score + ')');
   assert(!(await page.isVisible('#rewrites-card')), 'rewrites hidden for free users');
   assert(await page.isVisible('#aiprompt-locked'), 'AI prompt teaser locked for free users');
 

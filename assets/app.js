@@ -244,6 +244,18 @@
     return { score: score, keywords: keywords, matched: matched, missing: missing, checks: checks, checksPassed: checksPassed, wordCount: wordCount };
   }
 
+  // Projected score if the top N missing keywords were matched: moves their
+  // weights from missing to matched in the coverage math. Pure — reads the
+  // result, mutates nothing.
+  function projectedScore(result, topN) {
+    var totalW = result.keywords.reduce(function (s, k) { return s + k.weight; }, 0) || 1;
+    var matchedW = result.matched.reduce(function (s, k) { return s + k.weight; }, 0);
+    var addedW = result.missing.slice(0, topN).reduce(function (s, k) { return s + k.weight; }, 0);
+    var coverage = (matchedW + addedW) / totalW;
+    var score = Math.round(coverage * 80 + (result.checksPassed / result.checks.length) * 20);
+    return Math.max(0, Math.min(100, score));
+  }
+
   function band(score) {
     if (score >= 80) return { label: "Strong match", color: "var(--good)", summary: "You're in the top tier for this posting. Fix any remaining red flags below and apply with confidence." };
     if (score >= 60) return { label: "Fair match", color: "var(--warning)", summary: "Close, but an ATS may rank others above you. Add the missing keywords that are true of you and re-check." };
@@ -349,6 +361,16 @@
         // masked chips: layout-honest, but the real terms are never in the DOM
         rest.forEach(function (k) { blurRow.appendChild(chip(k.term, "missing", true)); });
         document.getElementById("missing-locked-count").textContent = rest.length;
+        // Score improvement preview: what adding the 3 visible keywords would do.
+        var projLine = document.getElementById("score-projection");
+        var proj = projectedScore(result, FREE_MISSING);
+        if (proj >= result.score + 3) {
+          document.getElementById("proj-from").textContent = result.score;
+          document.getElementById("proj-to").textContent = "~" + proj;
+          projLine.hidden = false;
+        } else {
+          projLine.hidden = true;
+        }
       } else {
         lockedBlock.hidden = true;
       }
