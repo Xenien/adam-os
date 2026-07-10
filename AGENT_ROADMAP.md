@@ -60,10 +60,15 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   articles in `guides/` (800–860 words each, drawn from the app's 8 checks and
   keyword logic, CTAs to the scanner, meta/OG tags, cross-linked to checkers);
   sitemap.xml +9 URLs; index footer extended + new "Guides" list. Smoke test passed.*
-- [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
+- [x] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
   is thin on: education/teaching, legal, construction/trades, hospitality,
   government/defense, creative/media. Keep the existing format; verify no
   duplicates; smoke test must pass.
+  *Done 2026-07-10: 156 terms added in 6 comment-grouped blocks (education &
+  teaching, legal, construction & trades, hospitality & food service,
+  government & defense, creative & media); programmatic check confirms 676
+  total entries, zero duplicates, all lowercase; extraction verified on a
+  sample teaching JD. Smoke test passed.*
 - [ ] **JD quality guard.** If the pasted job description is very short or looks
   like a URL, show a helpful inline message instead of weak results.
 - [ ] **FAQ schema markup.** Add JSON-LD FAQPage structured data to index.html
@@ -79,6 +84,7 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-10 — Skills dictionary expansion shipped: 156 new SKILLS entries in six comment-grouped blocks (education & teaching 26, legal 25, construction & trades 26, hospitality & food service 25, government & defense 25, creative & media 29), matching the existing lowercase/comment-grouped format with multi-word phrases kept where natural; ambiguous single words avoided (e.g. "trademark law" not bare "trademark", no bare "far"/"concrete"); programmatic verification: 676 total, zero duplicates, all lowercase, app.js parses, new terms extract correctly from a sample teaching JD. Smoke test passed.
 - 2026-07-10 — SEO wave 2 shipped: checkers/{project-managers,data-analysts,customer-service,human-resources,mechanical-engineers,warehouse-logistics}.html (same structure/voice as wave 1, keyword lists verified programmatically against the SKILLS dictionary, only the existing 75%/90% stats used), guides/{why-resumes-get-rejected,ats-resume-format,resume-keywords}.html (801/819/856 words, content drawn from the app's real 8 checks and keyword-extraction logic, strong CTA to ../index.html#app, meta description + OG tags, cross-links between guides and checkers), sitemap.xml +9 absolute URLs, index footer Field-guides list extended + new Guides list. Smoke test passed.
 - 2026-07-08 — Loop created. Backlog seeded by the initial build session.
 - 2026-07-08 — SEO field pages shipped: checkers/{nurses,software-engineers,teachers,accountants,marketers,sales-reps}.html (field intro, keyword list from the app dictionary, 3 tips, CTA to the scanner, meta/OG tags), sitemap.xml at root, "Field guides" links in the index footer. Smoke test passed.
