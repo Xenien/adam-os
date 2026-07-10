@@ -90,6 +90,10 @@ textarea {
 }
 textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .under-field { display: flex; justify-content: space-between; margin-top: 6px; }
+.jd-quality-note {
+  margin-top: 8px; padding: 8px 12px; color: var(--ink-2);
+  border: 1px solid var(--warning); border-radius: 8px; line-height: 1.5;
+}
 .link-btn {
   background: none; border: none; color: var(--accent); cursor: pointer;
   font: inherit; font-size: 0.85rem; padding: 0;

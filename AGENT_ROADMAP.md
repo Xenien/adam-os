@@ -69,8 +69,12 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   government & defense, creative & media); programmatic check confirms 676
   total entries, zero duplicates, all lowercase; extraction verified on a
   sample teaching JD. Smoke test passed.*
-- [ ] **JD quality guard.** If the pasted job description is very short or looks
+- [x] **JD quality guard.** If the pasted job description is very short or looks
   like a URL, show a helpful inline message instead of weak results.
+  *Done 2026-07-10: inline warning note under the JD field (reuses the hint
+  style, warning-colored border) when the JD is under 80 words or is a bare
+  URL; analysis is never blocked; note self-clears live once a fuller posting
+  is pasted; two smoke-test assertions added. Smoke test passed.*
 - [ ] **FAQ schema markup.** Add JSON-LD FAQPage structured data to index.html
   (rich results in Google) and Product schema for the Pro offer.
 - [ ] **Per-check anchors + copy tweaks.** Each ATS check gets an id so SEO pages
@@ -84,6 +88,7 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-10 — JD quality guard shipped: `jdQualityMessage()` in app.js flags a pasted JD that is a bare URL (explains JobFit can't open web pages — nothing leaves the browser) or under 80 words (notes short postings give weaker keyword results, states the word count, says the scan runs anyway); friendly inline `#jd-quality-note` under the JD field styled off the existing hint pattern with a warning border; analysis is never blocked; once visible the note re-evaluates on input so it clears itself when the full posting is pasted; smoke test gained assertions that a full-length posting shows no note and a short JD warns without blocking. Smoke test passed.
 - 2026-07-10 — Skills dictionary expansion shipped: 156 new SKILLS entries in six comment-grouped blocks (education & teaching 26, legal 25, construction & trades 26, hospitality & food service 25, government & defense 25, creative & media 29), matching the existing lowercase/comment-grouped format with multi-word phrases kept where natural; ambiguous single words avoided (e.g. "trademark law" not bare "trademark", no bare "far"/"concrete"); programmatic verification: 676 total, zero duplicates, all lowercase, app.js parses, new terms extract correctly from a sample teaching JD. Smoke test passed.
 - 2026-07-10 — SEO wave 2 shipped: checkers/{project-managers,data-analysts,customer-service,human-resources,mechanical-engineers,warehouse-logistics}.html (same structure/voice as wave 1, keyword lists verified programmatically against the SKILLS dictionary, only the existing 75%/90% stats used), guides/{why-resumes-get-rejected,ats-resume-format,resume-keywords}.html (801/819/856 words, content drawn from the app's real 8 checks and keyword-extraction logic, strong CTA to ../index.html#app, meta description + OG tags, cross-links between guides and checkers), sitemap.xml +9 absolute URLs, index footer Field-guides list extended + new Guides list. Smoke test passed.
 - 2026-07-08 — Loop created. Backlog seeded by the initial build session.

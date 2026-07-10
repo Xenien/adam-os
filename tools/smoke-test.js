@@ -67,6 +67,13 @@ function assert(cond, msg) {
   assert(projTo > score, 'projected score (' + projTo + ') exceeds current score (' + score + ')');
   assert(!(await page.isVisible('#rewrites-card')), 'rewrites hidden for free users');
   assert(await page.isVisible('#aiprompt-locked'), 'AI prompt teaser locked for free users');
+  assert(!(await page.isVisible('#jd-quality-note')), 'no JD quality note for a full-length posting');
+
+  // JD quality guard: a short JD warns but does not block the analysis
+  await page.fill('#jd-input', 'We are hiring a digital marketing specialist with experience in email marketing, seo, google analytics and copywriting. Apply today to join our marketing team in San Diego.');
+  await page.click('#analyze-btn');
+  await page.waitForSelector('#results:not([hidden])');
+  assert(await page.isVisible('#jd-quality-note'), 'short JD shows quality note without blocking analysis');
 
   // pro flow (simulated unlock)
   await page.evaluate(() => localStorage.setItem('jobfit_license', 'TEST'));

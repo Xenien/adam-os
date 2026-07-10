@@ -864,6 +864,30 @@
     });
   }
 
+  /* ------------------------------------------------------ JD quality guard */
+
+  var JD_MIN_WORDS = 80;
+
+  // A friendly nudge when the JD input is too thin to score well, or is a
+  // pasted link instead of the posting text. Never blocks the analysis.
+  function jdQualityMessage(jd) {
+    if (/^(https?:\/\/|www\.)\S+$/i.test(jd)) {
+      return "That looks like a link, not the posting itself. JobFit can't open web pages — nothing you paste ever leaves your browser — so copy the posting's full text and paste that instead for real results.";
+    }
+    var words = tokenize(jd).length;
+    if (words < JD_MIN_WORDS) {
+      return "This job description is only " + words + " words — short postings give weaker keyword results. For the most accurate score, paste the full posting, including the responsibilities and requirements sections. Scanning what you pasted anyway.";
+    }
+    return null;
+  }
+
+  function updateJdQualityNote(jd) {
+    var note = document.getElementById("jd-quality-note");
+    var msg = jdQualityMessage(jd);
+    if (msg) { note.textContent = "💡 " + msg; note.hidden = false; }
+    else { note.hidden = true; }
+  }
+
   function wordCounter(textarea, counter) {
     textarea.addEventListener("input", function () {
       var n = tokenize(textarea.value).length;
@@ -881,6 +905,12 @@
     wordCounter(resumeInput, document.getElementById("resume-count"));
     wordCounter(jdInput, document.getElementById("jd-count"));
 
+    // once the JD quality note is showing, keep it live so it clears itself
+    // as soon as the user pastes the fuller posting
+    jdInput.addEventListener("input", function () {
+      if (!document.getElementById("jd-quality-note").hidden) updateJdQualityNote(jdInput.value.trim());
+    });
+
     document.getElementById("load-sample").addEventListener("click", function () {
       resumeInput.value = SAMPLE_RESUME;
       jdInput.value = SAMPLE_JD;
@@ -893,6 +923,7 @@
       var jd = jdInput.value.trim();
       if (resume.length < 100) { alert("Paste your full resume text first (it looks too short)."); return; }
       if (jd.length < 100) { alert("Paste the full job description (it looks too short)."); return; }
+      updateJdQualityNote(jd); // warn on thin/link-only JDs — never blocks
       lastInputs = { resume: resume, jd: jd };
       track("scan_complete"); // event name only — no resume/JD content is ever sent
       render(analyze(resume, jd));
