@@ -35,13 +35,15 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   from a CDN (lazy-loaded like pdf.js). Most resumes are .docx — this is the
   single biggest effort-reducer left.
   *Done 2026-07-09: mammoth 1.8.0 lazy-loaded from cdnjs; handleFile routes .docx via extractRawText; accept attr, button label, and drag-drop filter updated; graceful fallback messages.*
+- [ ] **Score improvement preview.** On the free tier, show "adding the top 3
+  missing keywords would raise your score to ~N" (compute by simulating the
+  additions). Concrete dream-outcome math is the strongest free→paid nudge.
+  *(Moved ahead of dictionary expansion 2026-07-10: day-1 ad data shows strong
+  CTR but the free→paid bridge is the funnel's weakest link.)*
 - [ ] **Skills dictionary expansion.** Add ~150 terms covering fields the dictionary
   is thin on: education/teaching, legal, construction/trades, hospitality,
   government/defense, creative/media. Keep the existing format; verify no
   duplicates; smoke test must pass.
-- [ ] **Score improvement preview.** On the free tier, show "adding the top 3
-  missing keywords would raise your score to ~N" (compute by simulating the
-  additions). Concrete dream-outcome math is the strongest free→paid nudge.
 - [ ] **JD quality guard.** If the pasted job description is very short or looks
   like a URL, show a helpful inline message instead of weak results.
 - [ ] **FAQ schema markup.** Add JSON-LD FAQPage structured data to index.html
