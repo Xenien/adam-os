@@ -19,8 +19,9 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
    do not remove it, and never attach it to the resume/JD textareas.
 6. Don't change prices or the offer structure — that's the owner's call.
 7. Keep every page working with zero build step (plain HTML/CSS/JS).
-8. If today is after 2026-07-12 (Sunday), make no changes; reply that the loop
-   has ended and remind the owner to disable the Routine.
+8. The loop runs until the owner declares ROI reached (~$104 revenue: 4 Pro
+   sales or 1 Coach + 1 Pro) or says stop. Owner extended the mandate on
+   2026-07-11: "Make money is the motive. We do until we roi."
 
 ## Backlog (priority order)
 
@@ -85,6 +86,23 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   Lighthouse ≥95 on mobile (run via Playwright if available).
 - [ ] **More rewrite patterns.** Grow REWRITE_PATTERNS to ~12, keyed to keyword
   type (tool vs. method vs. soft skill) so suggestions feel less templated.
+- [ ] **SEO wave 3.** Six more checker pages (registered-nurses is done; add:
+  administrative-assistants, financial-analysts, graphic-designers,
+  electricians, executive-assistants, product-managers) + three more guides
+  ("resume-action-verbs.html", "resume-summary-examples.html" — examples must
+  be original generic templates, not fabricated people, and
+  "one-page-vs-two-page-resume.html"). Same quality bar as wave 2; update
+  sitemap + footer.
+- [ ] **Social share image.** Generate a static og-image (1200x630) matching the
+  brand look (dark gradient, gauge, "Beat the resume filter"), save as
+  assets/og-image.png, reference it with og:image + twitter:card meta tags on
+  index.html and all checker/guide pages. Improves click-through whenever any
+  page is shared or linked.
+- [ ] **Guides internal-link audit.** Every checker page links to all 3+ guides
+  and vice versa; every page's title/meta reviewed against the exact phrasing
+  in the "Searches" report terms (ats resume checker, resume score, rate my
+  resume, ai resume checker, resume grader) — align page titles with real
+  query language where honest.
 
 ## Log
 
