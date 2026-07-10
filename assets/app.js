@@ -882,6 +882,7 @@
       if (resume.length < 100) { alert("Paste your full resume text first (it looks too short)."); return; }
       if (jd.length < 100) { alert("Paste the full job description (it looks too short)."); return; }
       lastInputs = { resume: resume, jd: jd };
+      track("scan_complete"); // event name only — no resume/JD content is ever sent
       render(analyze(resume, jd));
     });
 
