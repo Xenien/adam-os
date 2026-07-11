@@ -27,7 +27,7 @@ window.JOBFIT_CONFIG = {
   // Optional $9 downsell: a separate Gumroad product ("AI Resume Rewrite
   // Prompt only", $9, license keys ON). Leave blank to hide the downsell
   // offer entirely. Fill both to activate.
-  downsellProductUrl: "",
-  downsellProductId: "",
+  downsellProductUrl: "https://hafezian22.gumroad.com/l/dqgld",
+  downsellProductId: "Zr0laFZwTK2Rj9co1eeaKw==",
   downsellPriceLabel: "$9",
 };
