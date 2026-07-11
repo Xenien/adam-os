@@ -264,8 +264,16 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 /* offer stack & guarantee */
 .price-anchor { font-size: 1.2rem; color: var(--muted); text-decoration: line-through; font-weight: 400; }
 .value-tag { display: block; color: var(--muted); font-size: 0.78rem; }
-.guarantee-box { margin-top: 20px; border: 2px solid var(--good); }
+.guarantee-box { margin-top: 20px; border: 2px solid var(--good); display: flex; align-items: center; gap: 20px; }
 .guarantee-box p { margin: 0; color: var(--ink-2); }
+.guarantee-text { flex: 1; }
+.seal { filter: drop-shadow(0 3px 6px rgba(0,0,0,0.28)); }
+.seal-box { width: 108px; height: 108px; flex-shrink: 0; transform: rotate(12deg); }
+.seal-card { position: absolute; top: 30px; right: -20px; width: 92px; height: 92px; transform: rotate(14deg); }
+@media (max-width: 760px) {
+  .guarantee-box { flex-direction: column; }
+  .seal-card { top: 24px; right: -8px; width: 76px; height: 76px; }
+}
 .lead-magnet-line { margin-top: 24px; color: var(--ink-2); }
 .trust-strip {
   list-style: none; margin: 20px 0 0; padding: 0;

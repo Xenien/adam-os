@@ -24,6 +24,24 @@
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="seal-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9dd7f"/>
+      <stop offset="0.5" stop-color="#e8b93a"/>
+      <stop offset="1" stop-color="#c08a12"/>
+    </linearGradient>
+    <symbol id="seal-guarantee" viewBox="0 0 200 200">
+      <polygon fill="url(#seal-gold)" stroke="#a3730c" stroke-width="2" points="100.0,3.0 109.5,15.5 121.6,5.4 128.1,19.8 142.1,12.6 145.2,28.0 160.5,24.2 160.1,39.9 175.8,39.5 172.0,54.8 187.4,57.9 180.2,71.9 194.6,78.4 184.5,90.5 197.0,100.0 184.5,109.5 194.6,121.6 180.2,128.1 187.4,142.1 172.0,145.2 175.8,160.5 160.1,160.1 160.5,175.8 145.2,172.0 142.1,187.4 128.1,180.2 121.6,194.6 109.5,184.5 100.0,197.0 90.5,184.5 78.4,194.6 71.9,180.2 57.9,187.4 54.8,172.0 39.5,175.8 39.9,160.1 24.2,160.5 28.0,145.2 12.6,142.1 19.8,128.1 5.4,121.6 15.5,109.5 3.0,100.0 15.5,90.5 5.4,78.4 19.8,71.9 12.6,57.9 28.0,54.8 24.2,39.5 39.9,39.9 39.5,24.2 54.8,28.0 57.9,12.6 71.9,19.8 78.4,5.4 90.5,15.5"/>
+      <circle cx="100" cy="100" r="74" fill="none" stroke="#a3730c" stroke-width="2.5" stroke-dasharray="3 4"/>
+      <text x="100" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="22" fill="#5b3d00">★</text>
+      <text x="100" y="94" text-anchor="middle" font-family="system-ui,sans-serif" font-size="19" font-weight="800" fill="#5b3d00" letter-spacing="1">30-DAY</text>
+      <text x="100" y="116" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15.5" font-weight="800" fill="#5b3d00">MONEY-BACK</text>
+      <text x="100" y="138" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="800" fill="#5b3d00" letter-spacing="0.5">GUARANTEE</text>
+    </symbol>
+  </defs>
+</svg>
+
 <header class="site-header">
   <div class="wrap header-row">
     <div class="brand">🎯 <strong>JobFit</strong></div>
@@ -224,6 +242,7 @@
         </ul>
         <button class="btn-primary unlock-cta" type="button">Get Pro — <span class="price-slot">$29</span> once</button>
         <p class="hint centered">One month of Jobscan costs more than owning this forever.</p>
+        <svg class="seal seal-card" aria-label="30-day money-back guarantee seal"><use href="#seal-guarantee"/></svg>
       </div>
       <div class="card price-card">
         <h3>Coach — Commercial license</h3>
@@ -240,10 +259,13 @@
     </div>
 
     <div class="card guarantee-box">
-      <h3>🛡 The Interview Guarantee</h3>
-      <p>Use JobFit on five real applications. If your interview rate doesn't improve within 30 days,
-      reply to your Gumroad receipt for a <strong>100% refund — and keep the bonuses</strong>.
-      You risk nothing. The software risks its price tag.</p>
+      <div class="guarantee-text">
+        <h3>🛡 The Interview Guarantee</h3>
+        <p>Use JobFit on five real applications. If your interview rate doesn't improve within 30 days,
+        reply to your Gumroad receipt for a <strong>100% refund — and keep the bonuses</strong>.
+        You risk nothing. The software risks its price tag.</p>
+      </div>
+      <svg class="seal seal-box" aria-label="30-day money-back guarantee seal"><use href="#seal-guarantee"/></svg>
     </div>
 
     <ul class="trust-strip" aria-label="Trust and security">
