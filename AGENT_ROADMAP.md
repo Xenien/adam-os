@@ -86,13 +86,20 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   Lighthouse ≥95 on mobile (run via Playwright if available).
 - [ ] **More rewrite patterns.** Grow REWRITE_PATTERNS to ~12, keyed to keyword
   type (tool vs. method vs. soft skill) so suggestions feel less templated.
-- [ ] **SEO wave 3.** Six more checker pages (registered-nurses is done; add:
+- [x] **SEO wave 3.** Six more checker pages (registered-nurses is done; add:
   administrative-assistants, financial-analysts, graphic-designers,
   electricians, executive-assistants, product-managers) + three more guides
   ("resume-action-verbs.html", "resume-summary-examples.html" — examples must
   be original generic templates, not fabricated people, and
   "one-page-vs-two-page-resume.html"). Same quality bar as wave 2; update
   sitemap + footer.
+  *Done 2026-07-11 (pulled ahead of mid-list items per owner's acquisition
+  priority — organic is the engine): 6 checker pages mirroring the wave-2
+  template with dictionary-verified keyword lists; 3 guides (963/939/932
+  words) drawn from the app's real checks — action verbs from ACTION_VERBS,
+  summary guide uses only bracketed fill-in templates (no named people),
+  page-length guide built on the 400–800 word check; sitemap.xml +9 URLs;
+  index footer extended; cross-links both ways. Smoke test passed.*
 - [ ] **Social share image.** Generate a static og-image (1200x630) matching the
   brand look (dark gradient, gauge, "Beat the resume filter"), save as
   assets/og-image.png, reference it with og:image + twitter:card meta tags on
@@ -106,6 +113,22 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-11 — SEO wave 3 shipped (taken ahead of FAQ-schema/anchors/a11y items
+  per the owner's standing acquisition priority; those remain next in line):
+  checkers/{administrative-assistants,financial-analysts,graphic-designers,
+  electricians,executive-assistants,product-managers}.html — same structure and
+  voice as wave 2, every keyword-list term verified programmatically against
+  the SKILLS dictionary (676 entries), only the existing 90%/75% stats reused;
+  guides/{resume-action-verbs,resume-summary-examples,one-page-vs-two-page-resume}.html
+  (963/939/932 words) — verbs guide lists only verbs from the app's
+  ACTION_VERBS set and mirrors the weak-phrase check, summary guide uses
+  original bracketed fill-in templates with zero fabricated people or stats,
+  page-length guide is built on the app's 400–800 word length check; all
+  three CTA to ../index.html#app; meta description + OG tags everywhere;
+  guides link all 18 checkers and checkers link all 6 guides; sitemap.xml +9
+  absolute URLs (26 total, all verified to exist); index footer lists
+  extended. Verified: every internal link across all 26 HTML pages resolves,
+  every new page serves 200. Smoke test passed.
 - 2026-07-10 — JD quality guard shipped: `jdQualityMessage()` in app.js flags a pasted JD that is a bare URL (explains JobFit can't open web pages — nothing leaves the browser) or under 80 words (notes short postings give weaker keyword results, states the word count, says the scan runs anyway); friendly inline `#jd-quality-note` under the JD field styled off the existing hint pattern with a warning border; analysis is never blocked; once visible the note re-evaluates on input so it clears itself when the full posting is pasted; smoke test gained assertions that a full-length posting shows no note and a short JD warns without blocking. Smoke test passed.
 - 2026-07-10 — Skills dictionary expansion shipped: 156 new SKILLS entries in six comment-grouped blocks (education & teaching 26, legal 25, construction & trades 26, hospitality & food service 25, government & defense 25, creative & media 29), matching the existing lowercase/comment-grouped format with multi-word phrases kept where natural; ambiguous single words avoided (e.g. "trademark law" not bare "trademark", no bare "far"/"concrete"); programmatic verification: 676 total, zero duplicates, all lowercase, app.js parses, new terms extract correctly from a sample teaching JD. Smoke test passed.
 - 2026-07-10 — SEO wave 2 shipped: checkers/{project-managers,data-analysts,customer-service,human-resources,mechanical-engineers,warehouse-logistics}.html (same structure/voice as wave 1, keyword lists verified programmatically against the SKILLS dictionary, only the existing 75%/90% stats used), guides/{why-resumes-get-rejected,ats-resume-format,resume-keywords}.html (801/819/856 words, content drawn from the app's real 8 checks and keyword-extraction logic, strong CTA to ../index.html#app, meta description + OG tags, cross-links between guides and checkers), sitemap.xml +9 absolute URLs, index footer Field-guides list extended + new Guides list. Smoke test passed.
