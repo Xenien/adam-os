@@ -267,6 +267,16 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .guarantee-box { margin-top: 20px; border: 2px solid var(--good); }
 .guarantee-box p { margin: 0; color: var(--ink-2); }
 .lead-magnet-line { margin-top: 24px; color: var(--ink-2); }
+.trust-strip {
+  list-style: none; margin: 20px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+}
+.trust-strip li {
+  font-size: 0.82rem; color: var(--ink-2);
+  border: 1px solid var(--hairline); border-radius: 999px;
+  padding: 6px 14px; background: var(--surface);
+}
+.modal-trust { font-size: 0.8rem; color: var(--muted); text-align: center; margin-top: 14px; }
 
 /* rewrites & bonuses */
 .rewrite-block { padding: 10px 0; border-bottom: 1px solid var(--hairline); }
