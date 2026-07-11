@@ -300,6 +300,7 @@
   /* ----------------------------------------------------------- results UI */
 
   var isPro = false;
+  var isLite = false; // $9 downsell: unlocks ONLY the AI rewrite prompt
   var lastResult = null;
   var lastInputs = null;
   var FREE_MISSING = 3, FREE_CHECKS = 2;
@@ -567,7 +568,7 @@
     var locked = document.getElementById("aiprompt-locked");
     var pro = document.getElementById("aiprompt-pro");
     card.hidden = false;
-    if (isPro) {
+    if (isPro || isLite) {
       locked.hidden = true; pro.hidden = false;
       document.getElementById("aiprompt-text").textContent = buildAiPrompt(result);
     } else {
@@ -758,6 +759,7 @@
   /* ------------------------------------------------------ pro / licensing */
 
   var LS_KEY = "jobfit_license";
+  var LS_KEY_LITE = "jobfit_license_lite";
 
   function setPro(on) {
     isPro = on;
@@ -766,10 +768,16 @@
     if (lastResult) render(lastResult);
   }
 
-  function verifyLicense(key) {
+  function setLite(on) {
+    isLite = on;
+    if (on && !isPro) document.getElementById("nav-unlock").textContent = "AI Prompt ✓";
+    if (lastResult) render(lastResult);
+  }
+
+  function verifyAgainst(productId, productPermalink, key) {
     var body = new URLSearchParams();
-    if (cfg.gumroadProductId) body.set("product_id", cfg.gumroadProductId);
-    else body.set("product_permalink", cfg.gumroadProductPermalink || "");
+    if (productId) body.set("product_id", productId);
+    else body.set("product_permalink", productPermalink || "");
     body.set("license_key", key);
     return fetch("https://api.gumroad.com/v2/licenses/verify", { method: "POST", body: body })
       .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
@@ -778,6 +786,15 @@
         var msg = (r.data && r.data.message) || "That license key doesn't look valid.";
         var err = new Error(msg); err.rejected = true; throw err;
       });
+  }
+
+  function verifyLicense(key) {
+    return verifyAgainst(cfg.gumroadProductId, cfg.gumroadProductPermalink, key);
+  }
+
+  function verifyLiteLicense(key) {
+    if (!cfg.downsellProductId) { var e = new Error("no downsell configured"); e.rejected = true; return Promise.reject(e); }
+    return verifyAgainst(cfg.downsellProductId, "", key);
   }
 
   // Google Ads conversion signals — guarded so ad blockers can't break the app.
@@ -813,19 +830,35 @@
       status.textContent = "✓ Pro unlocked. Enjoy!"; status.className = "verify-status ok";
       setPro(true);
       setTimeout(closeModal, 1200);
-    }).catch(function (e) {
-      status.textContent = e.rejected ? e.message : "Couldn't reach the license server — check your connection and try again.";
-      status.className = "verify-status err";
+    }).catch(function (proErr) {
+      // Not a Pro key — maybe it's a $9 AI-prompt (downsell) key.
+      verifyLiteLicense(key).then(function () {
+        localStorage.setItem(LS_KEY_LITE, key);
+        status.textContent = "✓ AI Rewrite Prompt unlocked!"; status.className = "verify-status ok";
+        setLite(true);
+        setTimeout(closeModal, 1200);
+      }).catch(function () {
+        status.textContent = proErr.rejected ? proErr.message : "Couldn't reach the license server — check your connection and try again.";
+        status.className = "verify-status err";
+      });
     });
   }
 
   function restoreLicense() {
     var key = localStorage.getItem(LS_KEY);
-    if (!key) return;
-    setPro(true); // optimistic — don't punish offline users
-    verifyLicense(key).catch(function (e) {
-      if (e.rejected) { localStorage.removeItem(LS_KEY); setPro(false); }
-    });
+    if (key) {
+      setPro(true); // optimistic — don't punish offline users
+      verifyLicense(key).catch(function (e) {
+        if (e.rejected) { localStorage.removeItem(LS_KEY); setPro(false); }
+      });
+    }
+    var liteKey = localStorage.getItem(LS_KEY_LITE);
+    if (liteKey) {
+      setLite(true);
+      verifyLiteLicense(liteKey).catch(function (e) {
+        if (e.rejected) { localStorage.removeItem(LS_KEY_LITE); setLite(false); }
+      });
+    }
   }
 
   /* ------------------------------------------------------------ sample data */
@@ -851,6 +884,13 @@
     document.getElementById("buy-link").addEventListener("click", function () {
       track("begin_checkout", { value: 29, currency: "USD" });
     });
+    if (cfg.downsellProductUrl && cfg.downsellProductId) {
+      var dl = document.getElementById("downsell-link");
+      dl.href = cfg.downsellProductUrl;
+      document.getElementById("downsell-price").textContent = cfg.downsellPriceLabel || "$9";
+      dl.hidden = false;
+      dl.addEventListener("click", function () { track("begin_checkout", { value: 9, currency: "USD" }); });
+    }
   }
 
   function initTheme() {

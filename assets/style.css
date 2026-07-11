@@ -77,6 +77,21 @@ a { color: var(--accent); }
   font-size: 0.9rem; color: var(--ink-2);
 }
 
+/* marquee */
+.marquee {
+  width: 100%; overflow: hidden; margin: 28px 0 4px;
+  border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+  background: var(--surface); padding: 10px 0;
+}
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 45s linear infinite; }
+.marquee-group { display: flex; align-items: center; gap: 26px; padding-right: 26px; white-space: nowrap; }
+.marquee-group span { color: var(--ink-2); font-size: 0.9rem; }
+.marquee-group span::before { content: "✦ "; color: var(--accent); }
+.marquee-group strong { color: var(--ink); font-size: 0.82rem; letter-spacing: 1.5px; }
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
 /* inputs */
 #app { padding-top: 24px; }
 .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }

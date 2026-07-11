@@ -23,4 +23,11 @@ window.JOBFIT_CONFIG = {
   // Optional: your Gumroad $0 lead-magnet product URL (captures emails).
   // Until set, the cheat sheet link points at the local cheatsheet.html page.
   leadMagnetUrl: "https://hafezian22.gumroad.com/l/pfkhle",
+
+  // Optional $9 downsell: a separate Gumroad product ("AI Resume Rewrite
+  // Prompt only", $9, license keys ON). Leave blank to hide the downsell
+  // offer entirely. Fill both to activate.
+  downsellProductUrl: "",
+  downsellProductId: "",
+  downsellPriceLabel: "$9",
 };
