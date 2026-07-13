@@ -76,8 +76,12 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
   style, warning-colored border) when the JD is under 80 words or is a bare
   URL; analysis is never blocked; note self-clears live once a fuller posting
   is pasted; two smoke-test assertions added. Smoke test passed.*
-- [ ] **FAQ schema markup.** Add JSON-LD FAQPage structured data to index.html
+- [x] **FAQ schema markup.** Add JSON-LD FAQPage structured data to index.html
   (rich results in Google) and Product schema for the Pro offer.
+  *Done 2026-07-13: one JSON-LD @graph block in the head — FAQPage with all 6
+  on-page Q&As verbatim (programmatically verified against the <details>
+  markup, tags stripped) + Product "JobFit Pro" with Offer $29 USD linking to
+  /#pricing; no aggregateRating/reviews (none exist). Smoke test passed.*
 - [ ] **Per-check anchors + copy tweaks.** Each ATS check gets an id so SEO pages
   and emails can deep-link (e.g. `/#check-action-verbs`).
 - [ ] **Accessibility pass.** Keyboard-navigate the whole flow; aria-live on the
@@ -113,6 +117,16 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-13 — FAQ schema markup shipped: a single `<script type="application/ld+json">`
+  block in the index.html head containing an @graph with (a) a FAQPage whose six
+  Question/Answer pairs are taken verbatim from the on-page FAQ `<details>`
+  elements (HTML tags stripped; a script verified every name/text matches the
+  page exactly) and (b) a Product entity for JobFit Pro — description drawn from
+  the page's own meta description + Pro feature bullets, brand JobFit, Offer of
+  $29 USD pointing at https://beatthefilter.com/#pricing, availability InStock.
+  Deliberately no aggregateRating or review markup: no reviews exist, and
+  fabricating them would violate hard rule 4 and Google's structured-data
+  policies. JSON validated with node JSON.parse. Smoke test passed.
 - 2026-07-11 — SEO wave 3 shipped (taken ahead of FAQ-schema/anchors/a11y items
   per the owner's standing acquisition priority; those remain next in line):
   checkers/{administrative-assistants,financial-analysts,graphic-designers,
