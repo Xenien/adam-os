@@ -74,7 +74,7 @@
           "name": "How does the guarantee work?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Buy Pro, use it on at least five real applications, and if your interview rate doesn't improve within 30 days, reply to your Gumroad receipt email for a full refund. No forms, no hoops, and you keep the bonus templates."
+            "text": "Two ways, both one email. Standard: 30-day money-back for any reason — reply to your Gumroad receipt and you're refunded, no forms, no hoops. Plus the interview promise: use JobFit on five real applications, and if your interview rate doesn't improve within 30 days, we insist on refunding you — and you keep the bonus templates."
           }
         }
       ]
@@ -135,10 +135,10 @@
 
 <main>
   <section class="hero wrap">
-    <h1>You didn't get rejected.<br>You got filtered.</h1>
-    <p class="hero-sub">Companies use screening software to throw out ~75% of resumes before a human ever reads them.
-    If you're sending applications into silence, this is almost certainly why. See exactly why yours gets cut —
-    and what to change — in 10 seconds. Free, no sign-up.</p>
+    <h1>Applying into a black hole?<br>See what the ATS actually sees.</h1>
+    <p class="hero-sub">Your <strong>full report free</strong> in 60 seconds — every missing keyword, every formatting
+    problem, all 8 checks. No account, no email wall, no subscription, and your resume never leaves your browser.
+    We're the ATS checker that won't trash your resume just to sell you a monthly plan. $29 once, only if you want the fixes.</p>
     <p class="privacy-badge">🔒 <strong>100% private.</strong> The analysis runs entirely in your browser. Your resume is never uploaded, stored, or sent anywhere.</p>
   </section>
 
@@ -205,6 +205,7 @@
           </div>
         </div>
         <p id="score-summary" class="score-summary"></p>
+        <p class="hint match-def">Match score = keyword &amp; formatting alignment with this posting — a measure of how <em>findable</em> you are. It's not a number any employer sees.</p>
       </div>
 
       <div class="stat-col">
@@ -228,17 +229,8 @@
 
     <div class="detail-grid">
       <div class="card">
-        <h3>Missing keywords <span class="hint">— add these where they're true of you</span></h3>
+        <h3>Missing keywords <span class="hint">— all of them, free. Add the ones that are true of you</span></h3>
         <div id="missing-free" class="chip-row"></div>
-        <div id="missing-locked" class="locked-block" hidden>
-          <div id="missing-blur" class="chip-row blurred" aria-hidden="true"></div>
-          <div class="lock-overlay">
-            <p id="score-projection" class="projection-line" hidden>Adding just the top 3 keywords above would take your score from <strong class="proj-num" id="proj-from"></strong> to <strong class="proj-num" id="proj-to"></strong>.</p>
-            <p><strong id="missing-locked-count"></strong> more missing keywords in the full report — every one you truthfully add raises your score further</p>
-            <button class="btn-primary btn-sm unlock-cta" type="button">Unlock Pro — <span class="price-slot">$9</span> one-time</button>
-          </div>
-        </div>
-        <div id="missing-pro" class="chip-row" hidden></div>
       </div>
 
       <div class="card">
@@ -248,16 +240,20 @@
     </div>
 
     <div class="card checks-card">
-      <h3>ATS formatting checks</h3>
+      <h3>ATS formatting checks <span class="hint">— all 8, free</span></h3>
       <ul id="checks-free" class="checks-list"></ul>
-      <div id="checks-locked" class="locked-block" hidden>
-        <ul id="checks-blur" class="checks-list blurred" aria-hidden="true"></ul>
-        <div class="lock-overlay">
-          <p><strong id="checks-locked-count"></strong> more checks (quantified results, action verbs, weak phrases…) in Pro</p>
-          <button class="btn-primary btn-sm unlock-cta" type="button">Unlock Pro — <span class="price-slot">$9</span> one-time</button>
-        </div>
-      </div>
-      <ul id="checks-pro" class="checks-list" hidden></ul>
+    </div>
+
+    <div class="card fix-card" id="fix-card" hidden>
+      <h3>You just got the whole diagnosis. Free. All of it.</h3>
+      <p id="score-projection" class="projection-line" hidden>Adding just your top 3 missing keywords would take this score from <strong class="proj-num" id="proj-from"></strong> to <strong class="proj-num" id="proj-to"></strong> — the fix kit shows you exactly how to do it honestly.</p>
+      <p>No 3-keyword teaser, no email wall, no upsell barrage. If you want the <strong>treatment</strong>:
+      fix patterns for every failed check, a rewrite prompt tailored to this exact posting, and print-ready
+      PDF reports — built to keep your resume sounding like <em>you</em>, not keyword salad.</p>
+      <p><strong><span class="price-slot">$29</span>. Once.</strong> No auto-renew — there's nothing to renew.
+      30-day money-back, any reason, one email. We only get paid when you stop needing us — that's the point
+      of a one-time price.</p>
+      <button class="btn-primary unlock-cta" type="button">Get the Fix Kit — <span class="price-slot">$29</span> once</button>
     </div>
 
     <div class="card" id="rewrites-card" hidden>
@@ -276,9 +272,8 @@
       <div id="aiprompt-locked" class="locked-block" hidden>
         <pre class="bonus-text blurred" aria-hidden="true">You are an expert resume writer specializing in ATS optimization. Below is my resume, the job description I am targeting, and my ATS analysis report. Your task is to xxxxxx xxxx xxxxxxx xx xxx xxxxxxx xxxxxxxx, xxxxx xxxxxxxxx xxx xxxxxxx xxxxxxxx...</pre>
         <div class="lock-overlay">
-          <p>Your personalized AI rewrite prompt is a Pro feature</p>
-          <button class="btn-primary btn-sm unlock-cta" type="button">Unlock Pro — <span class="price-slot">$29</span> one-time</button>
-          <a id="downsell-link" class="link-btn" href="#" target="_blank" rel="noopener" hidden>Not ready? Get just the AI prompt — <span id="downsell-price">$9</span> one-time</a>
+          <p>Your personalized AI rewrite prompt is part of the Fix Kit</p>
+          <button class="btn-primary btn-sm unlock-cta" type="button">Get the Fix Kit — <span class="price-slot">$29</span> once</button>
         </div>
       </div>
       <div id="aiprompt-pro" hidden>
@@ -297,23 +292,22 @@
   </section>
 
   <section class="wrap pain-section" id="why">
-    <h2>You're not the issue. The filter is.</h2>
-    <p>Those rejections piling up in your inbox? Most of them aren't a verdict on your experience,
-    your worth, or whether you're the "right fit." Applicant tracking systems — literal software —
-    filter out roughly three quarters of resumes before a human ever gets the chance to read yours
-    and actually judge whether you'd be great at the job.</p>
-    <p>It's unfair on every level. Hard-working people spend hours polishing their resumes and still
-    lose — not to a stronger candidate, but to a keyword match. You can be perfectly qualified and get
-    auto-rejected because the posting said "project management" and you wrote "managed projects."</p>
-    <p><strong>JobFit exists to even that playing field.</strong> It shows you exactly what the software
-    is scanning for, so your resume speaks the posting's language and gets its fighting chance of
-    reaching human hands — instead of dying in a database because of a missing word you could have
-    added in thirty seconds.</p>
-    <p>And we back it with real skin in the game: use JobFit on five real applications, and if your
-    interview rate doesn't improve within 30 days, you get a <strong>100% refund — no questions
-    asked</strong>. No downside. Real upside.</p>
-    <p class="pain-cta"><strong>Ready to beat the filter?</strong>
-    <button class="btn-primary btn-sm" type="button" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Run your free scan ↑</button></p>
+    <h2>An ATS won't reject you. It just won't find you.</h2>
+    <p>Here's the truth the "beat the robots" ads won't tell you: most applicant tracking systems don't
+    auto-reject anyone. What actually happens is quieter and crueler — a recruiter searches a database of
+    hundreds of applicants by keyword, and if your resume parsed badly or says "managed projects" where
+    they searched "project management," you're on page nine. Not rejected. <strong>Never found.</strong></p>
+    <p>That's why the rejections and silence piling up in your inbox aren't a verdict on your experience
+    or your worth. Hard-working people spend hours polishing resumes and still lose — not to a stronger
+    candidate, but to a wording mismatch and a parser that mangled their two-column layout.</p>
+    <p><strong>JobFit checks the two things that are actually real:</strong> does the machine read your
+    file correctly, and will a recruiter's search find you. The full diagnosis is free — every keyword
+    gap, every formatting problem. Your resume gets its fighting chance of reaching human hands.</p>
+    <p>And we put skin in the game twice: a <strong>30-day money-back guarantee, any reason, one
+    email</strong> — plus our promise that if your interview rate doesn't improve after using JobFit on
+    five real applications, we don't deserve your $29 anyway.</p>
+    <p class="pain-cta"><strong>Ready to get found?</strong>
+    <button class="btn-primary btn-sm" type="button" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Run your free full report ↑</button></p>
   </section>
 
   <section class="wrap" id="guides">
@@ -367,20 +361,20 @@
         <h3>Free</h3>
         <div class="price-big">$0</div>
         <ul class="feature-list">
-          <li>✓ Match score</li>
-          <li>✓ Top 3 missing keywords</li>
-          <li>✓ 2 ATS formatting checks</li>
-          <li>✓ Unlimited scans</li>
+          <li>✓ <strong>Full report</strong> — every missing keyword</li>
+          <li>✓ All 8 ATS checks, with what's wrong</li>
+          <li>✓ Match score + improvement projection</li>
+          <li>✓ Unlimited scans · no account · no email</li>
         </ul>
-        <button class="btn-secondary" type="button" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Start free</button>
+        <button class="btn-secondary" type="button" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Get the free report</button>
       </div>
       <div class="card price-card featured">
         <div class="ribbon">Launch price — rises to $49 after the first 100</div>
         <h3>Pro — The Interview Engine</h3>
         <div class="price-big"><span class="price-slot">$29</span> <span class="price-anchor">$49</span></div>
         <ul class="feature-list">
-          <li>✓ <strong>Every</strong> missing keyword, for <strong>every</strong> job you apply to, forever <span class="value-tag">what Jobscan rents for $49.95/mo</span></li>
-          <li>✓ All 8 ATS checks with exact fix-it instructions</li>
+          <li>✓ <strong>Fix patterns</strong> for every gap the free report finds <span class="value-tag">the treatment, not another diagnosis</span></li>
+          <li>✓ Exact fix-it instructions for all 8 checks</li>
           <li>✓ <strong>Bullet rewrite patterns</strong> — copy, fill in your numbers, paste</li>
           <li>✓ <strong>AI Rewrite Prompt</strong> — a personalized prompt that makes ChatGPT/Claude rewrite your resume for this exact job, without making things up</li>
           <li>✓ Print-ready PDF report per application</li>
@@ -408,10 +402,11 @@
 
     <div class="card guarantee-box">
       <div class="guarantee-text">
-        <h3>🛡 The Interview Guarantee</h3>
-        <p>Use JobFit on five real applications. If your interview rate doesn't improve within 30 days,
-        reply to your Gumroad receipt for a <strong>100% refund — and keep the bonuses</strong>.
-        You risk nothing. The software risks its price tag.</p>
+        <h3>🛡 Two guarantees. One email.</h3>
+        <p><strong>30-day money-back, any reason.</strong> Reply to your Gumroad receipt and you're refunded —
+        no forms, no fees, no "prove it." And our interview promise on top: use JobFit on five real
+        applications, and if your interview rate doesn't improve, we don't deserve your $29 anyway —
+        refund, <strong>and keep the bonuses</strong>. Either way, you risk nothing.</p>
       </div>
       <svg class="seal seal-box" aria-label="30-day money-back guarantee seal"><use href="#seal-guarantee"/></svg>
     </div>
@@ -437,7 +432,7 @@
     <details><summary>Why keywords? Isn't that gaming the system?</summary><p>Applicant tracking systems and recruiters both search by keywords. If you have the skill but your resume says it differently than the posting does, you lose. JobFit only recommends adding keywords <em>that are true of you</em> — it's translation, not fabrication.</p></details>
     <details><summary>How does the Pro unlock work?</summary><p>You buy once through Gumroad (secure card/PayPal checkout) and instantly receive a license key by email. Paste it into JobFit and Pro is unlocked on that device forever. Use the same key on your other devices too.</p></details>
     <details><summary>What's the Coach license?</summary><p>Same product, commercial rights plus your brand on every report. If you're a career coach, resume writer, or recruiter running client resumes through JobFit as part of a paid service, buy the Coach tier at checkout. One client typically pays you 2–7× what the license costs.</p></details>
-    <details><summary>How does the guarantee work?</summary><p>Buy Pro, use it on at least five real applications, and if your interview rate doesn't improve within 30 days, reply to your Gumroad receipt email for a full refund. No forms, no hoops, and you keep the bonus templates.</p></details>
+    <details><summary>How does the guarantee work?</summary><p>Two ways, both one email. Standard: 30-day money-back for any reason — reply to your Gumroad receipt and you're refunded, no forms, no hoops. Plus the interview promise: use JobFit on five real applications, and if your interview rate doesn't improve within 30 days, we insist on refunding you — and you keep the bonus templates.</p></details>
   </section>
 </main>
 

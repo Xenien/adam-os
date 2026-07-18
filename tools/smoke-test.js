@@ -60,8 +60,9 @@ function assert(cond, msg) {
   await page.waitForSelector('#results:not([hidden])');
   const score = parseInt(await page.textContent('#score-value'), 10);
   assert(score >= 0 && score <= 100, 'score in range (' + score + ')');
-  assert((await page.$$('#missing-free .chip')).length === 3, 'free tier shows exactly 3 missing keywords');
-  assert(await page.isVisible('#missing-locked .lock-overlay'), 'paywall overlay visible for free users');
+  assert((await page.$$('#missing-free .chip')).length > 3, 'free tier shows ALL missing keywords');
+  assert((await page.$$('#checks-free li')).length === 8, 'free tier shows all 8 checks');
+  assert(await page.isVisible('#fix-card'), 'fix-kit pitch visible for free users');
   assert(await page.isVisible('#score-projection'), 'score projection line visible for free users');
   const projTo = parseInt((await page.textContent('#proj-to')).replace(/[^0-9]/g, ''), 10);
   assert(projTo > score, 'projected score (' + projTo + ') exceeds current score (' + score + ')');
@@ -81,8 +82,9 @@ function assert(cond, msg) {
   await page.click('#load-sample');
   await page.click('#analyze-btn');
   await page.waitForSelector('#results:not([hidden])');
-  assert((await page.$$('#missing-pro .chip')).length > 3, 'pro sees all missing keywords');
-  assert((await page.$$('#checks-pro li')).length === 8, 'pro sees all 8 checks');
+  assert((await page.$$('#missing-free .chip')).length > 3, 'pro sees all missing keywords');
+  assert((await page.$$('#checks-free li')).length === 8, 'pro sees all 8 checks');
+  assert(!(await page.isVisible('#fix-card')), 'fix-kit pitch hidden for pro');
   assert(await page.isVisible('#rewrites-card'), 'pro sees rewrite patterns');
   assert(await page.isVisible('#bonuses-card'), 'pro sees bonuses');
   assert(await page.isVisible('#print-btn'), 'pro sees print/PDF button');

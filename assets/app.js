@@ -270,9 +270,9 @@
 
   function band(score) {
     if (score >= 80) return { label: "Strong match", color: "var(--good)", summary: "You're in the top tier for this posting. Fix any remaining red flags below and apply with confidence." };
-    if (score >= 60) return { label: "Fair match", color: "var(--warning)", summary: "Close, but an ATS may rank others above you. Add the missing keywords that are true of you and re-check." };
+    if (score >= 60) return { label: "Fair match", color: "var(--warning)", summary: "Close — but a recruiter searching by these keywords may surface other resumes first. Add the missing terms that are true of you and re-check." };
     if (score >= 40) return { label: "Below average", color: "var(--serious)", summary: "Your resume isn't speaking this posting's language yet. Work the missing keywords into your bullets and skills." };
-    return { label: "Low match", color: "var(--critical)", summary: "As written, an ATS will likely filter this out. Tailor your resume to this posting before applying — or reconsider fit." };
+    return { label: "Low match", color: "var(--critical)", summary: "As written, a recruiter's keyword search probably won't find this resume. Tailor it to this posting before applying — or reconsider fit." };
   }
 
   /* -------------------------------------------------------------- gauge UI */
@@ -300,7 +300,6 @@
   /* ----------------------------------------------------------- results UI */
 
   var isPro = false;
-  var isLite = false; // $9 downsell: unlocks ONLY the AI rewrite prompt
   var lastResult = null;
   var lastInputs = null;
   var FREE_MISSING = 3, FREE_CHECKS = 2;
@@ -352,59 +351,31 @@
     if (result.matched.length === 0) matchedRow.appendChild(el("p", "hint", "None yet — your resume shares no key terms with this posting."));
     result.matched.forEach(function (k) { matchedRow.appendChild(chip(k.term, "matched")); });
 
-    // missing keywords: free sees top 3, pro sees all
+    // missing keywords: the FULL list is free — we sell the fix, not the diagnosis
     var freeRow = document.getElementById("missing-free");
-    var proRow = document.getElementById("missing-pro");
-    var lockedBlock = document.getElementById("missing-locked");
-    var blurRow = document.getElementById("missing-blur");
-    freeRow.textContent = ""; proRow.textContent = ""; blurRow.textContent = "";
-
+    freeRow.textContent = "";
     if (result.missing.length === 0) {
       freeRow.appendChild(el("p", "hint", "Nothing missing — every key term in the posting appears in your resume. 🎉"));
-      lockedBlock.hidden = true; proRow.hidden = true;
-    } else if (isPro) {
-      lockedBlock.hidden = true; proRow.hidden = false;
-      result.missing.forEach(function (k) { proRow.appendChild(chip(k.term, "missing")); });
     } else {
-      result.missing.slice(0, FREE_MISSING).forEach(function (k) { freeRow.appendChild(chip(k.term, "missing")); });
-      var rest = result.missing.slice(FREE_MISSING);
-      proRow.hidden = true;
-      if (rest.length > 0) {
-        lockedBlock.hidden = false;
-        // masked chips: layout-honest, but the real terms are never in the DOM
-        rest.forEach(function (k) { blurRow.appendChild(chip(k.term, "missing", true)); });
-        document.getElementById("missing-locked-count").textContent = rest.length;
-        // Score improvement preview: what adding the 3 visible keywords would do.
-        var projLine = document.getElementById("score-projection");
-        var proj = projectedScore(result, FREE_MISSING);
-        if (proj >= result.score + 3) {
-          document.getElementById("proj-from").textContent = result.score;
-          document.getElementById("proj-to").textContent = "~" + proj;
-          projLine.hidden = false;
-        } else {
-          projLine.hidden = true;
-        }
-      } else {
-        lockedBlock.hidden = true;
-      }
+      result.missing.forEach(function (k) { freeRow.appendChild(chip(k.term, "missing")); });
     }
 
-    // checks: free sees first 2, pro sees all
+    // checks: all 8 free, full tips
     var checksFree = document.getElementById("checks-free");
-    var checksPro = document.getElementById("checks-pro");
-    var checksLocked = document.getElementById("checks-locked");
-    var checksBlur = document.getElementById("checks-blur");
-    checksFree.textContent = ""; checksPro.textContent = ""; checksBlur.textContent = "";
+    checksFree.textContent = "";
+    result.checks.forEach(function (c) { checksFree.appendChild(checkItem(c)); });
 
-    if (isPro) {
-      checksLocked.hidden = true; checksPro.hidden = false;
-      result.checks.forEach(function (c) { checksPro.appendChild(checkItem(c)); });
-      checksFree.hidden = true;
+    // fix-kit pitch under the free full report (hidden for Pro)
+    var fixCard = document.getElementById("fix-card");
+    fixCard.hidden = isPro;
+    var projLine = document.getElementById("score-projection");
+    var proj = result.missing.length > 0 ? projectedScore(result, 3) : 0;
+    if (!isPro && proj >= result.score + 3) {
+      document.getElementById("proj-from").textContent = result.score;
+      document.getElementById("proj-to").textContent = "~" + proj;
+      projLine.hidden = false;
     } else {
-      checksFree.hidden = false; checksPro.hidden = true; checksLocked.hidden = false;
-      result.checks.slice(0, FREE_CHECKS).forEach(function (c) { checksFree.appendChild(checkItem(c)); });
-      result.checks.slice(FREE_CHECKS).forEach(function (c) { checksBlur.appendChild(checkItem(c, true)); });
-      document.getElementById("checks-locked-count").textContent = result.checks.length - FREE_CHECKS;
+      projLine.hidden = true;
     }
 
     // tailoring checklist (pro only)
@@ -568,7 +539,7 @@
     var locked = document.getElementById("aiprompt-locked");
     var pro = document.getElementById("aiprompt-pro");
     card.hidden = false;
-    if (isPro || isLite) {
+    if (isPro) {
       locked.hidden = true; pro.hidden = false;
       document.getElementById("aiprompt-text").textContent = buildAiPrompt(result);
     } else {
@@ -759,18 +730,11 @@
   /* ------------------------------------------------------ pro / licensing */
 
   var LS_KEY = "jobfit_license";
-  var LS_KEY_LITE = "jobfit_license_lite";
 
   function setPro(on) {
     isPro = on;
     document.body.classList.toggle("pro", on);
     document.getElementById("nav-unlock").textContent = on ? "Pro ✓" : "Enter license key";
-    if (lastResult) render(lastResult);
-  }
-
-  function setLite(on) {
-    isLite = on;
-    if (on && !isPro) document.getElementById("nav-unlock").textContent = "AI Prompt ✓";
     if (lastResult) render(lastResult);
   }
 
@@ -790,11 +754,6 @@
 
   function verifyLicense(key) {
     return verifyAgainst(cfg.gumroadProductId, cfg.gumroadProductPermalink, key);
-  }
-
-  function verifyLiteLicense(key) {
-    if (!cfg.downsellProductId) { var e = new Error("no downsell configured"); e.rejected = true; return Promise.reject(e); }
-    return verifyAgainst(cfg.downsellProductId, "", key);
   }
 
   // Google Ads conversion signals — guarded so ad blockers can't break the app.
@@ -846,17 +805,8 @@
       setPro(true);
       setTimeout(closeModal, 1200);
     }).catch(function (proErr) {
-      // Not a Pro key — maybe it's a $9 AI-prompt (downsell) key.
-      verifyLiteLicense(key).then(function () {
-        if (localStorage.getItem(LS_KEY_LITE) !== key) trackPurchase(9, key);
-        localStorage.setItem(LS_KEY_LITE, key);
-        status.textContent = "✓ AI Rewrite Prompt unlocked!"; status.className = "verify-status ok";
-        setLite(true);
-        setTimeout(closeModal, 1200);
-      }).catch(function () {
-        status.textContent = proErr.rejected ? proErr.message : "Couldn't reach the license server — check your connection and try again.";
-        status.className = "verify-status err";
-      });
+      status.textContent = proErr.rejected ? proErr.message : "Couldn't reach the license server — check your connection and try again.";
+      status.className = "verify-status err";
     });
   }
 
@@ -866,13 +816,6 @@
       setPro(true); // optimistic — don't punish offline users
       verifyLicense(key).catch(function (e) {
         if (e.rejected) { localStorage.removeItem(LS_KEY); setPro(false); }
-      });
-    }
-    var liteKey = localStorage.getItem(LS_KEY_LITE);
-    if (liteKey) {
-      setLite(true);
-      verifyLiteLicense(liteKey).catch(function (e) {
-        if (e.rejected) { localStorage.removeItem(LS_KEY_LITE); setLite(false); }
       });
     }
   }
@@ -900,13 +843,6 @@
     document.getElementById("buy-link").addEventListener("click", function () {
       track("begin_checkout", { value: 29, currency: "USD" });
     });
-    if (cfg.downsellProductUrl && cfg.downsellProductId) {
-      var dl = document.getElementById("downsell-link");
-      dl.href = cfg.downsellProductUrl;
-      document.getElementById("downsell-price").textContent = cfg.downsellPriceLabel || "$9";
-      dl.hidden = false;
-      dl.addEventListener("click", function () { track("begin_checkout", { value: 9, currency: "USD" }); });
-    }
   }
 
   function initTheme() {

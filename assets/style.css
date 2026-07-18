@@ -185,6 +185,12 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .chip.matched::before { content: "✓ "; color: var(--good-text); font-weight: 700; }
 .chip .w { color: var(--muted); font-size: 0.75rem; margin-left: 4px; }
 
+/* fix-kit pitch card */
+.fix-card { margin-top: 16px; border: 2px solid var(--accent); }
+.fix-card p { color: var(--ink-2); max-width: 640px; }
+.fix-card .projection-line { color: var(--ink); font-size: 1.02rem; }
+.match-def { text-align: center; max-width: 340px; margin-top: 10px; }
+
 /* locked/blur upsell */
 .locked-block { position: relative; margin-top: 12px; }
 .blurred { filter: blur(6px); user-select: none; pointer-events: none; }
