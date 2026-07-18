@@ -117,6 +117,26 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-18 — Two new pages (commit 2 of owner-authorized two-commit run):
+  (a) guides/how-ats-actually-work.html — the honesty page (~850-word body, same
+  voice/structure as existing guides): ATS = database + parser + recruiter
+  keyword search; explicitly retracts the unsourced 75% stat; knockout questions
+  are the real automation; tool match scores are proxies no employer ever sees;
+  candid "what JobFit can and can't fix" section; CTA to the scanner;
+  cross-linked with the other guides, all 18 checkers, and the compare page.
+  (b) compare/jobfit-vs-jobscan.html — honest comparison. Jobscan facts verified
+  2026-07-18: refund policy from their own cancellation-policy page (refund only
+  within 2 calendar days of billing start, only if unused, 3.5% fee, cancelling
+  doesn't auto-refund); Premium $49.95/mo or $89.95/3mo and free tier of 5
+  account-metered scans/month corroborated across multiple current third-party
+  reviews (their pricing page renders only inside the logged-in app — noted on
+  the page as the account-required evidence). 5-row table (price model, free
+  tier, account, processing location, refunds), a genuine "when Jobscan is the
+  better fit" section, dated-accuracy disclaimer linking their pricing page. No
+  price/offer changes. Both pages added to sitemap.xml (28 URLs, all exist) and
+  the index footer Guides list. Verified: both pages serve 200, render headless
+  with zero console errors, all internal links across 28 pages resolve. Smoke
+  test passed.
 - 2026-07-18 — Honest-stats sweep (commit 1 of owner-authorized two-commit run):
   removed every "roughly 75% of resumes are cut/filtered/rejected" claim from all
   18 checker pages and guides/why-resumes-get-rejected.html (body + meta
