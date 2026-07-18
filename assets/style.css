@@ -214,6 +214,20 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 #tailoring-card { margin-top: 16px; }
 .tailoring-list { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 0.92rem; }
 
+/* pain section & guides showcase */
+.pain-section p { color: var(--ink-2); max-width: 720px; font-size: 1.02rem; }
+.pain-section strong { color: var(--ink); }
+.pain-cta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 22px; }
+.pain-cta strong { font-size: 1.15rem; }
+.guide-card { text-decoration: none; color: inherit; display: block; transition: border-color 0.15s ease; }
+.guide-card:hover { border-color: var(--accent); }
+.guide-card h3 { color: var(--accent); font-size: 1rem; }
+.guide-card p { color: var(--ink-2); font-size: 0.88rem; margin: 0; }
+.guides-grid { margin-bottom: 8px; }
+.field-guides-head { margin: 26px 0 12px; font-size: 1rem; }
+.field-chip-row a.chip { text-decoration: none; color: var(--ink-2); }
+.field-chip-row a.chip:hover { border-color: var(--accent); color: var(--ink); }
+
 /* how it works */
 .three-up { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 @media (max-width: 760px) { .three-up { grid-template-columns: 1fr; } }

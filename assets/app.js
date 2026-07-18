@@ -799,6 +799,20 @@
 
   // Google Ads conversion signals — guarded so ad blockers can't break the app.
   var ADS_CONVERSIONS = { begin_checkout: "AW-18309597951/ZEn5CPj0mM0cEP-V2ZpE" };
+  var ADS_PURCHASE = "AW-18309597951/5hLWCJm7-80cEP-V2ZpE";
+
+  // Fired on FIRST license activation on this device — the reliable purchase
+  // signal, on our own domain where the Google tag is guaranteed to be loaded.
+  // transaction_id = license key, so Google dedupes repeat activations.
+  function trackPurchase(value, licenseKey) {
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "conversion", {
+          send_to: ADS_PURCHASE, value: value, currency: "USD", transaction_id: licenseKey
+        });
+      }
+    } catch (e) { /* analytics must never break the product */ }
+  }
   function track(eventName, params) {
     try {
       if (typeof window.gtag !== "function") return;
@@ -826,6 +840,7 @@
     if (!key) { status.textContent = "Paste the license key from your Gumroad receipt email."; status.className = "verify-status err"; return; }
     status.textContent = "Checking…"; status.className = "verify-status";
     verifyLicense(key).then(function () {
+      if (localStorage.getItem(LS_KEY) !== key) trackPurchase(29, key);
       localStorage.setItem(LS_KEY, key);
       status.textContent = "✓ Pro unlocked. Enjoy!"; status.className = "verify-status ok";
       setPro(true);
@@ -833,6 +848,7 @@
     }).catch(function (proErr) {
       // Not a Pro key — maybe it's a $9 AI-prompt (downsell) key.
       verifyLiteLicense(key).then(function () {
+        if (localStorage.getItem(LS_KEY_LITE) !== key) trackPurchase(9, key);
         localStorage.setItem(LS_KEY_LITE, key);
         status.textContent = "✓ AI Rewrite Prompt unlocked!"; status.className = "verify-status ok";
         setLite(true);
