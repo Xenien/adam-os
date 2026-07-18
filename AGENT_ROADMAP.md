@@ -117,6 +117,17 @@ picks the **topmost unchecked item**, implements it, verifies it, checks it off
 
 ## Log
 
+- 2026-07-18 — Honest-stats sweep (commit 1 of owner-authorized two-commit run):
+  removed every "roughly 75% of resumes are cut/filtered/rejected" claim from all
+  18 checker pages and guides/why-resumes-get-rejected.html (body + meta
+  description) — the stat is unsourced (traces to a defunct vendor) and the
+  informed audience knows it. Each page now uses the honest mechanism instead:
+  the ATS is a database recruiters search by keyword, and badly-parsed or
+  differently-worded resumes never surface — "you're not rejected, you're never
+  found" — matching the positioning already on index.html. The defensible
+  "over 90% of large employers use an ATS" usage stat was kept. Prose reflowed
+  per page so nothing else changed. All internal links across 26 pages verified.
+  Smoke test passed.
 - 2026-07-13 — FAQ schema markup shipped: a single `<script type="application/ld+json">`
   block in the index.html head containing an @graph with (a) a FAQPage whose six
   Question/Answer pairs are taken verbatim from the on-page FAQ `<details>`
