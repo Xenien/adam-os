@@ -760,10 +760,14 @@
   var ADS_CONVERSIONS = { begin_checkout: "AW-18309597951/ZEn5CPj0mM0cEP-V2ZpE" };
   var ADS_PURCHASE = "AW-18309597951/5hLWCJm7-80cEP-V2ZpE";
 
+  // Founder/test keys whose activations must never count as revenue signals.
+  var TRACKING_EXEMPT_KEYS = { "6BABA936-F13B4951-8D87234D-9091DBC0": true };
+
   // Fired on FIRST license activation on this device — the reliable purchase
   // signal, on our own domain where the Google tag is guaranteed to be loaded.
   // transaction_id = license key, so Google dedupes repeat activations.
   function trackPurchase(value, licenseKey) {
+    if (TRACKING_EXEMPT_KEYS[licenseKey]) return;
     try {
       if (typeof window.gtag === "function") {
         window.gtag("event", "conversion", {
